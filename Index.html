@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen</title>
+    <title>Franse Werkwoorden Oefenen - V2</title>
     <style>
         * {
             box-sizing: border-box;
@@ -108,6 +108,24 @@
         .input-field:focus {
             border-color: #2563eb;
         }
+        .feedback-inline {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 12px 0 20px 0;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: left;
+        }
+        .feedback-correct {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border-left: 4px solid #16a34a;
+        }
+        .feedback-wrong {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
         .btn {
             width: 100%;
             padding: 14px;
@@ -144,19 +162,20 @@
             background-color: #2563eb;
         }
         .advice-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #16a34a;
-            padding: 16px;
-            border-radius: 4px;
+            background-color: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 6px;
             text-align: left;
             margin-bottom: 24px;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .advice-title {
             font-weight: 700;
-            color: #14532d;
-            margin-bottom: 4px;
+            color: #1e3a8a;
+            font-size: 16px;
+            margin-bottom: 8px;
         }
         .error-section-title {
             text-align: left;
@@ -241,7 +260,7 @@
     <!-- SCREEN 2: QUIZ INTERFACE -->
     <div id="quiz-screen" class="hidden">
         <h1>Franse Werkwoorden Oefenen</h1>
-        <div class="subtitle">Selecteer je modules en druk op Enter om te controleren.</div>
+        <div class="subtitle">Vul de juiste vertaling in en druk op Enter.</div>
         
         <div class="stats">
             Goed: <span id="stat-correct">0</span> | Totaal behandeld: <span id="stat-total">0</span>
@@ -253,14 +272,16 @@
         
         <input type="text" id="french-input" class="input-field" placeholder="Typ het Franse werkwoord..." autocomplete="off">
         
-        <button class="btn btn-primary" id="btn-controleren" onclick="checkAnswer()">Controleer</button>
+        <div id="feedback-container" class="hidden"></div>
+        
+        <button class="btn btn-primary" id="btn-controleren" onclick="handleInputSubmission()">Controleer</button>
         <button class="btn btn-danger" onclick="stopQuiz()">Stop & Toon Resultaten</button>
     </div>
 
     <!-- SCREEN 3: ENDSCREEN -->
     <div id="end-screen" class="hidden">
         <h1>Franse Werkwoorden Oefenen</h1>
-        <div class="subtitle">Selecteer je modules en druk op Enter om te controleren.</div>
+        <div class="subtitle">Overzicht en analyse van je prestaties.</div>
         
         <div class="result-heading">Jouw Resultaten 📊</div>
         <div class="result-text">
@@ -268,8 +289,8 @@
         </div>
         
         <div class="advice-box">
-            <div class="advice-title">Focus-advies:</div>
-            <div id="advice-text">Het lijkt erop dat deze combinatie nog iets te groot is. Zet bij de volgende ronde eens slechts 1 module tegelijk aan. Als je één module helemaal foutloos kent, voeg je pas de volgende module toe. Stap voor stap werkt het best!</div>
+            <div class="advice-title" id="advice-title">Analyse & Gepersonaliseerd Advies:</div>
+            <div id="advice-text">Laadt advies...</div>
         </div>
         
         <div id="error-container">
@@ -284,7 +305,6 @@
 </div>
 
 <script>
-    // Complete database gathered directly from the provided images
     const verbDatabase = {
         1: [
             { nl: "aankomen", fr: "arriver" }, { nl: "aankondigen", fr: "annoncer" }, { nl: "beginnen", fr: "commencer" },
@@ -297,7 +317,7 @@
             { nl: "huilen", fr: "pleurer" }, { nl: "kijken", fr: "regarder" }, { nl: "kijken (naar iets)", fr: "regarder qqc" },
             { nl: "komen", fr: "venir" }, { nl: "kunnen", fr: "pouvoir" }, { nl: "luisteren (naar iem.)", fr: "écouter qqn" },
             { nl: "maken", fr: "faire" }, { nl: "moeten", fr: "devoir" }, { nl: "mogen", fr: "pouvoir" },
-            { nl: "onthouden", fr: "retenir" }, { nl: "ontmoeten", fr: "rencontre" }, { nl: "ontvangen", fr: "recevoir" },
+            { nl: "onthouden", fr: "retenir" }, { nl: "ontmoeten", fr: "rencontrer" }, { nl: "ontvangen", fr: "recevoir" },
             { nl: "opladen", fr: "charger" }, { nl: "opruimen", fr: "ranger" }, { nl: "passeren", fr: "passer" },
             { nl: "plaatsen", fr: "placer" }, { nl: "praten", fr: "parler" }, { nl: "rekenen", fr: "compter" },
             { nl: "sluiten", fr: "fermer" }, { nl: "spelen", fr: "jouer" }, { nl: "studeren", fr: "étudier" },
@@ -354,16 +374,10 @@
             { nl: "vullen", fr: "remplir" }, { nl: "waarschuwen", fr: "avertir" }
         ],
         6: [
-            { nl: "partir", fr: "vertrekken" }, { nl: "servir", fr: "dienen, opdienen" }, { nl: "sortir", fr: "uitgaan, naar buiten gaan" },
-            { nl: "dormir", fr: "slapen" }, { nl: "sentir", fr: "voelen, ruiken" }, { nl: "mentir", fr: "liegen" }
+            { nl: "vertrekken", fr: "partir" }, { nl: "dienen, opdienen", fr: "servir" }, { nl: "uitgaan, naar buiten gaan", fr: "sortir" },
+            { nl: "slapen", fr: "dormir" }, { nl: "voelen, ruiken", fr: "sentir" }, { nl: "liegen", fr: "mentir" }
         ]
     };
-
-    // Correcting module 6 translation order if they were inverted in Excel headings
-    verbDatabase[6] = [
-        { nl: "vertrekken", fr: "partir" }, { nl: "dienen, opdienen", fr: "servir" }, { nl: "uitgaan, naar buiten gaan", fr: "sortir" },
-        { nl: "slapen", fr: "dormir" }, { nl: "voelen, ruiken", fr: "sentir" }, { nl: "liegen", fr: "mentir" }
-    ];
 
     let activePool = [];
     let currentQuizList = [];
@@ -372,8 +386,10 @@
     let scoreTotal = 0;
     let wrongAnswers = [];
     let selectedModulesCount = 0;
+    
+    // Track screen state: false = waiting for control, true = feedback displayed, waiting for Enter to advance
+    let isShowingFeedbackState = false; 
 
-    // Start current quiz session
     function startQuiz() {
         const checkboxes = document.querySelectorAll('.mod-checkbox');
         activePool = [];
@@ -384,10 +400,7 @@
                 const modId = parseInt(cb.value);
                 selectedModulesCount++;
                 verbDatabase[modId].forEach(item => {
-                    activePool.push({
-                        ...item,
-                        mod: modId
-                    });
+                    activePool.push({ ...item, mod: modId });
                 });
             }
         });
@@ -397,17 +410,19 @@
             return;
         }
 
-        // Shuffle active words pool
         currentQuizList = [...activePool].sort(() => Math.random() - 0.5);
         currentWordIndex = 0;
         scoreCorrect = 0;
         scoreTotal = 0;
         wrongAnswers = [];
+        isShowingFeedbackState = false;
 
-        // Update view
         document.getElementById('start-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.remove('hidden');
         document.getElementById('end-screen').classList.add('hidden');
+        
+        document.getElementById('feedback-container').classList.add('hidden');
+        document.getElementById('btn-controleren').innerText = "Controleer";
         
         updateStats();
         showNextWord();
@@ -415,7 +430,6 @@
 
     function showNextWord() {
         if (currentWordIndex >= currentQuizList.length) {
-            // If all words are completed naturally, end quiz
             stopQuiz();
             return;
         }
@@ -426,22 +440,47 @@
         
         const inputField = document.getElementById('french-input');
         inputField.value = "";
+        inputField.disabled = false;
         inputField.focus();
+
+        const fbContainer = document.getElementById('feedback-container');
+        fbContainer.classList.add('hidden');
+        fbContainer.className = ""; // Reset custom feedback styles
+        
+        document.getElementById('btn-controleren').innerText = "Controleer";
+        isShowingFeedbackState = false;
     }
 
-    function checkAnswer() {
+    function handleInputSubmission() {
+        if (isShowingFeedbackState) {
+            // Second enter/click -> Advance to next word
+            currentWordIndex++;
+            showNextWord();
+        } else {
+            // First enter/click -> Evaluate and show correct/wrong message below
+            checkAnswerInline();
+        }
+    }
+
+    function checkAnswerInline() {
         if (currentWordIndex >= currentQuizList.length) return;
 
         const currentWord = currentQuizList[currentWordIndex];
-        const userInput = document.getElementById('french-input').value.trim().toLowerCase();
+        const inputField = document.getElementById('french-input');
+        const userInput = inputField.value.trim().toLowerCase();
         
-        // Support flexible matching for multi-answers like "taper/frapper"
         const correctAnswers = currentWord.fr.toLowerCase().split('/').map(ans => ans.trim());
         const isCorrect = correctAnswers.includes(userInput);
 
         scoreTotal++;
+        
+        const fbContainer = document.getElementById('feedback-container');
+        fbContainer.classList.remove('hidden');
+        
         if (isCorrect) {
             scoreCorrect++;
+            fbContainer.className = "feedback-inline feedback-correct";
+            fbContainer.innerText = "✓ Goed gedaan!";
         } else {
             wrongAnswers.push({
                 nl: currentWord.nl,
@@ -449,11 +488,15 @@
                 user: userInput || "(leeg)",
                 mod: currentWord.mod
             });
+            fbContainer.className = "feedback-inline feedback-wrong";
+            fbContainer.innerText = `❌ Fout, het was: ${currentWord.fr}`;
         }
 
-        currentWordIndex++;
+        inputField.disabled = true;
         updateStats();
-        showNextWord();
+        
+        document.getElementById('btn-controleren').innerText = "Volgende (Druk Enter)";
+        isShowingFeedbackState = true;
     }
 
     function updateStats() {
@@ -461,30 +504,36 @@
         document.getElementById('stat-total').innerText = scoreTotal;
     }
 
-    // Stop and show full report
     function stopQuiz() {
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('end-screen').classList.remove('hidden');
 
-        // Math results
         const percent = scoreTotal > 0 ? Math.round((scoreCorrect / scoreTotal) * 100) : 0;
         document.getElementById('res-correct').innerText = scoreCorrect;
         document.getElementById('res-total').innerText = scoreTotal;
         document.getElementById('res-percent').innerText = percent + "%";
 
-        // Feedback & Tips Engine matching screenshot behavior dynamically
+        const adviceTitle = document.getElementById('advice-title');
         const adviceText = document.getElementById('advice-text');
+
+        // Highly enhanced pedagogical feedback
         if (scoreTotal === 0) {
-            adviceText.innerText = "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test!";
+            adviceTitle.innerText = "Geen gegevens beschikbaar 🔎";
+            adviceText.innerText = "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test om een gerichte analyse te ontvangen.";
         } else if (percent === 100) {
-            adviceText.innerText = "Geweldig gedaan! Je hebt een score van 100% behaald. Je kent deze modules perfect. Voeg gerust extra modules toe voor een nieuwe uitdaging!";
-        } else if (selectedModulesCount > 1) {
-            adviceText.innerText = "Het lijkt erop dat deze combinatie nog iets te groot is. Zet bij de volgende ronde eens slechts 1 module tegelijk aan. Als je één module helemaal foutloos kent, voeg je pas de volgende module toe. Stap voor stap werkt het best!";
+            adviceTitle.innerText = "Uitzonderlijke prestatie! 🏆";
+            adviceText.innerText = `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
+        } else if (percent >= 80) {
+            adviceTitle.innerText = "Geweldig op weg! 🚀";
+            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+        } else if (percent >= 50) {
+            adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
+            adviceText.innerText = `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
         } else {
-            adviceText.innerText = "Goed geprobeerd! Herhaal deze module nog een keer totdat je 100% scoort. Concentreer je vooral op de fouten hieronder.";
+            adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
+            adviceText.innerText = `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
         }
 
-        // Render errors list
         const errorListDiv = document.getElementById('error-list');
         const errorContainer = document.getElementById('error-container');
         errorListDiv.innerHTML = "";
@@ -511,10 +560,9 @@
         document.getElementById('start-screen').classList.remove('hidden');
     }
 
-    // Support trigger check on Enter key press inside input field
     document.getElementById('french-input').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            checkAnswer();
+            handleInputSubmission();
         }
     });
 </script>
