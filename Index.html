@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Ultieme Franse Werkwoorden Typ-Quiz</title>
+    <title>De Ultieme Franse Werkwoorden Typ-Quiz met Modules</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,11 +22,37 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             text-align: center;
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
         }
-        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 24px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; font-size: 24px; }
         p.subtitle { color: #7f8c8d; font-size: 14px; margin-top: 0; margin-bottom: 20px; }
+        
+        /* Module selector styling */
+        .module-selection {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        .module-selection h3 { margin: 0 0 10px 0; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #334155;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .checkbox-label input { margin-right: 8px; transform: scale(1.1); }
+
         .word-to-translate { font-size: 30px; font-weight: bold; color: #2980b9; margin: 20px 0; }
         input[type="text"] {
             width: 90%;
@@ -104,8 +130,20 @@
 
 <div class="quiz-container">
     <h1>Franse Werkwoorden Oefenen</h1>
-    <p class="subtitle">Druk op Enter om te controleren én om door te gaan.</p>
+    <p class="subtitle">Selecteer je modules en druk op Enter om te controleren.</p>
     
+    <div class="module-selection" id="module-selector-box">
+        <h3>Kies welke modules je wilt oefenen:</h3>
+        <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox" value="1" checked onchange="updateActiveWords()"> Module 1</label>
+            <label class="checkbox-label"><input type="checkbox" value="2" checked onchange="updateActiveWords()"> Module 2</label>
+            <label class="checkbox-label"><input type="checkbox" value="3" checked onchange="updateActiveWords()"> Module 3</label>
+            <label class="checkbox-label"><input type="checkbox" value="4" checked onchange="updateActiveWords()"> Module 4</label>
+            <label class="checkbox-label"><input type="checkbox" value="5" checked onchange="updateActiveWords()"> Module 5</label>
+            <label class="checkbox-label"><input type="checkbox" value="6" checked onchange="updateActiveWords()"> Module 6</label>
+        </div>
+    </div>
+
     <div id="quiz-area">
         <div class="score">Goed: <span id="score-count">0</span> | Totaal behandeld: <span id="total-count">0</span></div>
         <div class="word-to-translate" id="dutch-word">Laden...</div>
@@ -126,100 +164,107 @@
         <div id="focus-container" class="focus-advice"></div>
         <h3 id="errors-title" style="margin-top: 20px; font-size: 16px;">Foutjes om na te kijken:</h3>
         <ul id="error-list" class="error-list"></ul>
-        <button onclick="location.reload()" style="background-color: #3498db; margin-top: 15px; width: 100%;">Opnieuw Starten</button>
+        <button onclick="location.reload()" style="background-color: #3498db; margin-top: 15px; width: 100%;">Opnieuw Oefenen</button>
     </div>
 </div>
 
 <script>
-    // De complete, gigantische lijst met alle werkwoorden gecombineerd
-    const words = [
-        // Oorspronkelijke lijst
-        { nl: "aankomen", fr: "arriver" }, { nl: "nemen", fr: "prendre" },
-        { nl: "aankondigen", fr: "annoncer" }, { nl: "antwoorden", fr: "répondre" },
-        { nl: "beginnen", fr: "commencer" }, { nl: "begrijpen", fr: "comprendre" },
-        { nl: "bewegen", fr: "bouger" }, { nl: "dragen", fr: "porter" },
-        { nl: "bezoeken (iets)", fr: "visiter" }, { nl: "koken", fr: "cuisiner" },
-        { nl: "binnenkomen", fr: "entrer" }, { nl: "leren", fr: "apprendre" },
-        { nl: "blijven", fr: "rester" }, { nl: "naar beneden gaan", fr: "descendre" },
-        { nl: "chatten", fr: "chatter" }, { nl: "teruggeven", fr: "rendre" },
-        { nl: "dansen", fr: "danser" }, { nl: "verkopen", fr: "vendre" },
-        { nl: "delen", fr: "partager" }, { nl: "verliezen", fr: "perdre" },
-        { nl: "doen", fr: "faire" }, { nl: "wachten (op iem.)", fr: "attendre" },
-        { nl: "dol zijn op", fr: "adorer" }, { nl: "doorbrengen", fr: "passer" },
-        { nl: "duren", fr: "durer" }, { nl: "eten", fr: "manger" },
-        { nl: "gaan", fr: "aller" }, { nl: "geven", fr: "donner" },
-        { nl: "haten", fr: "détester" }, { nl: "hebben", fr: "avoir" },
-        { nl: "helpen", fr: "aider" }, { nl: "houden van", fr: "aimer" },
-        { nl: "huilen", fr: "pleurer" }, { nl: "wenen", fr: "pleurer" },
-        { nl: "kijken", fr: "regarder" }, { nl: "kijken (naar iets)", fr: "regarder" },
-        { nl: "komen", fr: "venir" }, { nl: "kunnen", fr: "pouvoir" },
-        { nl: "luisteren (naar iem.)", fr: "écouter" }, { nl: "maken", fr: "faire" },
-        { nl: "moeten", fr: "devoir" }, { nl: "mogen", fr: "pouvoir" },
-        { nl: "onthouden", fr: "retenir" }, { nl: "ontmoeten", fr: "rencontrer" },
-        { nl: "ontvangen", fr: "recevoir" }, { nl: "opladen", fr: "charger" },
-        { nl: "opruimen", fr: "ranger" }, { nl: "passeren", fr: "passer" },
-        { nl: "plaatsen", fr: "placer" }, { nl: "praten", fr: "parler" },
-        { nl: "rekenen", fr: "compter" }, { nl: "tellen", fr: "compter" },
-        { nl: "sluiten", fr: "fermer" }, { nl: "spelen", fr: "jouer" },
-        { nl: "studeren", fr: "étudier" }, { nl: "tekenen", fr: "dessiner" },
-        { nl: "terug naar huis gaan", fr: "rentrer" }, { nl: "terugkomen", fr: "revenir" },
-        { nl: "tonen", fr: "montrer" }, { nl: "uitspreken", fr: "prononcer" },
-        { nl: "uitvinden", fr: "inventer" }, { nl: "uitwissen", fr: "effacer" },
-        { nl: "vasthouden", fr: "tenir" }, { nl: "veranderen", fr: "changer" },
-        { nl: "verbeteren", fr: "corriger" }, { nl: "vergeten", fr: "oublier" },
-        { nl: "verhuizen", fr: "déménager" }, { nl: "verkiezen", fr: "préférer" },
-        { nl: "verplaatsen", fr: "déplacer" }, { nl: "vertellen", fr: "raconter" },
-        { nl: "vinden", fr: "trouver" }, { nl: "vragen", fr: "demander" },
-        { nl: "werken", fr: "travailler" }, { nl: "weten", fr: "savoir" },
-        { nl: "willen", fr: "vouloir" }, { nl: "winnen", fr: "gagner" },
-        { nl: "wonen", fr: "habiter" }, { nl: "worden", fr: "devenir" },
-        { nl: "zien", fr: "voir" }, { nl: "zijn", fr: "être" },
-        { nl: "zingen", fr: "chanter" }, { nl: "zoeken", fr: "chercher" },
-        { nl: "zwemmen", fr: "nager" },
+    // Alle werkwoorden netjes opgedeeld in de 6 modules volgens jouw lijst
+    const allWords = [
+        // MODULE 1
+        { mod: 1, nl: "aankomen", fr: "arriver" }, { mod: 1, nl: "nemen", fr: "prendre" },
+        { mod: 1, nl: "(op)kloppen", fr: "battre" }, { mod: 1, nl: "aankondigen", fr: "annoncer" },
+        { mod: 1, nl: "eindigen", fr: "finir" }, { mod: 1, nl: "vertrekken", fr: "partir" },
+        { mod: 1, nl: "antwoorden", fr: "répondre" }, { mod: 1, nl: "aanbieden", fr: "offrir" },
+        { mod: 1, nl: "beklagen", fr: "plaindre" }, { mod: 1, nl: "groter worden", fr: "grandir" },
+        { mod: 1, nl: "dienen, opdienen", fr: "servir" },
 
-        // Nieuw toegevoegde werkwoorden
-        { nl: "(op)kloppen", fr: "battre" }, { nl: "eindigen", fr: "finir" },
-        { nl: "vertrekken", fr: "partir" }, { nl: "aanbieden", fr: "offrir" },
-        { nl: "beklagen", fr: "plaindre" }, { nl: "groter worden", fr: "grandir" },
-        { nl: "dienen, opdienen", fr: "servir" }, { nl: "aandoen / plaatsen / leggen / zetten", fr: "mettre" },
-        { nl: "bereiken", fr: "atteindre" }, { nl: "kiezen", fr: "choisir" },
-        { nl: "uitgaan, naar buiten gaan", fr: "sortir" }, { nl: "bedekken", fr: "couvrir" },
-        { nl: "beschermen", fr: "protéger" }, { nl: "kloppen", fr: "frapper" },
-        { nl: "slapen", fr: "dormir" }, { nl: "beëindigen", fr: "terminer" },
-        { nl: "betekenen", fr: "signifier" }, { nl: "nadenken", fr: "réfléchir" },
-        { nl: "voelen, ruiken", fr: "sentir" }, { nl: "beloven", fr: "promettre" },
-        { nl: "creëren", fr: "créer" }, { nl: "ontlenen", fr: "emprunter" },
-        { nl: "liegen", fr: "mentir" }, { nl: "beschrijven", fr: "décrire" },
-        { nl: "opmerken", fr: "remarquer" }, { nl: "breken", fr: "casser" },
-        { nl: "doven / uitdoen", fr: "éteindre" }, { nl: "roepen", fr: "crier" },
-        { nl: "gebruiken", fr: "utiliser" }, { nl: "fotograferen", fr: "photographier" },
-        { nl: "slagen", fr: "réussir" }, { nl: "gieten", fr: "verser" },
-        { nl: "herdoen", fr: "refaire" }, { nl: "stappen", fr: "marcher" },
-        { nl: "herhalen", fr: "répéter" }, { nl: "trekken", fr: "tirer" },
-        { nl: "lezen", fr: "lire" }, { nl: "hopen", fr: "espérer" },
-        { nl: "verdikken", fr: "grossir" }, { nl: "lijden", fr: "souffrir" },
-        { nl: "horen", fr: "entendre" }, { nl: "vermageren", fr: "maigrir" },
-        { nl: "markeren", fr: "surligner" }, { nl: "kopen", fr: "acheter" },
-        { nl: "versieren", fr: "décorer" }, { nl: "mengen", fr: "mélanger" },
-        { nl: "lijken op", fr: "ressembler" }, { nl: "voeden", fr: "nourrir" },
-        { nl: "ontdekken", fr: "découvrir" }, { nl: "logeren", fr: "loger" },
-        { nl: "vullen", fr: "remplir" }, { nl: "ontvangen / verwelkomen", fr: "accueillir" },
-        { nl: "ophangen", fr: "pendre" }, { nl: "waarschuwen", fr: "avertir" },
-        { nl: "openen", fr: "ouvrir" }, { nl: "organiseren", fr: "organiser" },
-        { nl: "optillen", fr: "enlever" }, { nl: "proberen", fr: "essayer" },
-        { nl: "samenvoegen / verbinden", fr: "joindre" }, { nl: "plukken", fr: "cueillir" },
-        { nl: "schilderen", fr: "peindre" }, { nl: "proeven", fr: "déguster" },
-        { nl: "schillen", fr: "éplucher" }, { nl: "transformeren", fr: "transformer" },
-        { nl: "schoonmaken", fr: "nettoyer" }, { nl: "schrijven", fr: "écrire" },
-        { nl: "uitleggen", fr: "expliquer" }, { nl: "smelten", fr: "fondre" },
-        { nl: "snijden", fr: "couper" }, { nl: "toestaan", fr: "permettre" },
-        { nl: "volledig maken", fr: "compléter" }, { nl: "toevoegen", fr: "ajouter" },
-        { nl: "voorbereiden", fr: "préparer" }, { nl: "voorstellen", fr: "suggerer" },
-        { nl: "voorverwarmen", fr: "préchauffer" }, { nl: "vrezen", fr: "craindre" },
-        { nl: "wassen", fr: "laver" }, { nl: "weggooien", fr: "jeter" },
-        { nl: "zeggen", fr: "dire" }
+        // MODULE 2
+        { mod: 2, nl: "beginnen", fr: "commencer" }, { mod: 2, nl: "begrijpen", fr: "comprendre" },
+        { mod: 2, nl: "aandoen / plaatsen / leggen / zetten", fr: "mettre" }, { mod: 2, nl: "bereiken", fr: "atteindre" },
+        { mod: 2, nl: "kiezen", fr: "choisir" }, { mod: 2, nl: "uitgaan, naar buiten gaan", fr: "sortir" },
+        { mod: 2, nl: "bewegen", fr: "bouger" }, { mod: 2, nl: "dragen", fr: "porter" },
+        { mod: 2, nl: "bedekken", fr: "couvrir" }, { mod: 2, nl: "beschermen", fr: "protéger" },
+        { mod: 2, nl: "kloppen", fr: "frapper" }, { mod: 2, nl: "slapen", fr: "dormir" },
+
+        // MODULE 3
+        { mod: 3, nl: "bezoeken (iets)", fr: "visiter" }, { mod: 3, nl: "koken", fr: "cuisiner" },
+        { mod: 3, nl: "beëindigen", fr: "terminer" }, { mod: 3, nl: "betekenen", fr: "signifier" },
+        { mod: 3, nl: "nadenken", fr: "réfléchir" }, { mod: 3, nl: "voelen, ruiken", fr: "sentir" },
+        { mod: 3, nl: "binnenkomen", fr: "entrer" }, { mod: 3, nl: "leren", fr: "apprendre" },
+        { mod: 3, nl: "beloven", fr: "promettre" }, { mod: 3, nl: "creëren", fr: "créer" },
+        { mod: 3, nl: "ontlenen", fr: "emprunter" }, { mod: 3, nl: "liegen", fr: "mentir" },
+
+        // MODULE 4
+        { mod: 4, nl: "blijven", fr: "rester" }, { mod: 4, nl: "naar beneden gaan", fr: "descendre" },
+        { mod: 4, nl: "beschrijven", fr: "décrire" }, { mod: 4, nl: "delen", fr: "partager" },
+        { mod: 4, nl: "opmerken", fr: "remarquer" }, { mod: 4, nl: "chatten", fr: "chatter" },
+        { mod: 4, nl: "teruggeven", fr: "rendre" }, { mod: 4, nl: "breken", fr: "casser" },
+        { mod: 4, nl: "doven / uitdoen", fr: "éteindre" }, { mod: 4, nl: "roepen", fr: "crier" },
+        { mod: 4, nl: "dansen", fr: "danser" }, { mod: 4, nl: "verkopen", fr: "vendre" },
+        { mod: 4, nl: "gebruiken", fr: "utiliser" }, { mod: 4, nl: "fotograferen", fr: "photographier" },
+        { mod: 4, nl: "slagen", fr: "réussir" },
+
+        // MODULE 5
+        { mod: 5, nl: "verliezen", fr: "perdre" }, { mod: 5, nl: "gieten", fr: "verser" },
+        { mod: 5, nl: "herdoen", fr: "refaire" }, { mod: 5, nl: "stappen", fr: "marcher" },
+        { mod: 5, nl: "doen", fr: "faire" }, { mod: 5, nl: "wachten (op iem.)", fr: "attendre" },
+        { mod: 5, nl: "herhalen", fr: "répéter" }, { mod: 5, nl: "trekken", fr: "tirer" },
+        { mod: 5, nl: "dol zijn op", fr: "adorer" }, { mod: 5, nl: "lezen", fr: "lire" },
+        { mod: 5, nl: "hopen", fr: "espérer" }, { mod: 5, nl: "verdikken", fr: "grossir" },
+        { mod: 5, nl: "doorbrengen / passeren", fr: "passer" }, { mod: 5, nl: "lijden", fr: "souffrir" },
+        { mod: 5, nl: "horen", fr: "entendre" }, { mod: 5, nl: "vermageren", fr: "maigrir" },
+
+        // MODULE 6
+        { mod: 6, nl: "duren", fr: "durer" }, { mod: 6, nl: "markeren", fr: "surligner" },
+        { mod: 6, nl: "kopen", fr: "acheter" }, { mod: 6, nl: "eten", fr: "manger" },
+        { mod: 6, nl: "versieren", fr: "décorer" }, { mod: 6, nl: "mengen", fr: "mélanger" },
+        { mod: 6, nl: "lijken op", fr: "ressembler" }, { mod: 6, nl: "voeden", fr: "nourrir" },
+        { mod: 6, nl: "gaan", fr: "aller" }, { mod: 6, nl: "ontdekken", fr: "découvrir" },
+        { mod: 6, nl: "logeren", fr: "loger" }, { mod: 6, nl: "vullen", fr: "remplir" },
+        { mod: 6, nl: "geven", fr: "donner" }, { mod: 6, nl: "ontvangen / verwelkomen", fr: "accueillir" },
+        { mod: 6, nl: "ophangen", fr: "pendre" }, { mod: 6, nl: "waarschuwen", fr: "avertir" },
+        { mod: 6, nl: "haten", fr: "détester" }, { mod: 6, nl: "openen", fr: "ouvrir" },
+        { mod: 6, nl: "organiseren", fr: "organiser" }, { mod: 6, nl: "hebben", fr: "avoir" },
+        { mod: 6, nl: "optillen", fr: "enlever" }, { mod: 6, nl: "proberen", fr: "essayer" },
+        { mod: 6, nl: "helpen", fr: "aider" }, { mod: 6, nl: "samenvoegen / verbinden", fr: "joindre" },
+        { mod: 6, nl: "houden van", fr: "aimer" }, { mod: 6, nl: "plukken", fr: "cueillir" },
+        { mod: 6, nl: "schilderen", fr: "peindre" }, { mod: 6, nl: "huilen / wenen", fr: "pleurer" },
+        { mod: 6, nl: "proeven", fr: "déguster" }, { mod: 6, nl: "kijken (naar iets)", fr: "regarder" },
+        { mod: 6, nl: "schillen", fr: "éplucher" }, { mod: 6, nl: "transformeren", fr: "transformer" },
+        { mod: 6, nl: "schoonmaken", fr: "nettoyer" }, { mod: 6, nl: "komen / terugkomen", fr: "venir" },
+        { mod: 6, nl: "schrijven", fr: "écrire" }, { mod: 6, nl: "uitleggen", fr: "expliquer" },
+        { mod: 6, nl: "kunnen / mogen", fr: "pouvoir" }, { mod: 6, nl: "smelten", fr: "fondre" },
+        { mod: 6, nl: "uitspreken", fr: "prononcer" }, { mod: 6, nl: "luisteren (naar iem.)", fr: "écouter" },
+        { mod: 6, nl: "snijden", fr: "couper" }, { mod: 6, nl: "maken", fr: "faire" },
+        { mod: 6, nl: "toestaan", fr: "permettre" }, { mod: 6, nl: "volledig maken", fr: "compléter" },
+        { mod: 6, nl: "moeten", fr: "devoir" }, { mod: 6, nl: "toevoegen", fr: "ajouter" },
+        { mod: 6, nl: "voorbereiden", fr: "préparer" }, { mod: 6, nl: "onthouden", fr: "retenir" },
+        { mod: 6, nl: "voorstellen", fr: "suggerer" }, { mod: 6, nl: "ontmoeten", fr: "rencontrer" },
+        { mod: 6, nl: "voorverwarmen", fr: "préchauffer" }, { mod: 6, nl: "vrezen", fr: "craindre" },
+        { mod: 6, nl: "ontvangen", fr: "recevoir" }, { mod: 6, nl: "wassen", fr: "laver" },
+        { mod: 6, nl: "weggooien", fr: "jeter" }, { mod: 6, nl: "opladen", fr: "charger" },
+        { mod: 6, nl: "zeggen", fr: "dire" }, { mod: 6, nl: "opruimen / ranger", fr: "ranger" },
+        { mod: 6, nl: "plaatsen", fr: "placer" }, { mod: 6, nl: "praten", fr: "parler" },
+        { mod: 6, nl: "rekenen / tellen", fr: "compter" }, { mod: 6, nl: "sluiten", fr: "fermer" },
+        { mod: 6, nl: "spelen", fr: "jouer" }, { mod: 6, nl: "studeren", fr: "étudier" },
+        { mod: 6, nl: "tekenen", fr: "dessiner" }, { mod: 6, nl: "terug naar huis gaan / rentrer", fr: "rentrer" },
+        { mod: 6, nl: "terugkomen", fr: "revenir" }, { mod: 6, nl: "tonen", fr: "montrer" },
+        { mod: 6, nl: "uitvinden", fr: "inventer" }, { mod: 6, nl: "uitwissen", fr: "effacer" },
+        { mod: 6, nl: "vasthouden", fr: "tenir" }, { mod: 6, nl: "veranderen", fr: "changer" },
+        { mod: 6, nl: "verbeteren", fr: "corriger" }, { mod: 6, nl: "vergeten", fr: "oublier" },
+        { mod: 6, nl: "verhuizen", fr: "déménager" }, { mod: 6, nl: "verkiezen", fr: "préférer" },
+        { mod: 6, nl: "verplaatsen", fr: "déplacer" }, { mod: 6, nl: "vertellen", fr: "raconter" },
+        { mod: 6, nl: "vinden", fr: "trouver" }, { mod: 6, nl: "vragen", fr: "demander" },
+        { mod: 6, nl: "werken", fr: "travailler" }, { mod: 6, nl: "weten", fr: "savoir" },
+        { mod: 6, nl: "willen", fr: "vouloir" }, { mod: 6, nl: "winnen", fr: "gagner" },
+        { mod: 6, nl: "wonen", fr: "habiter" }, { mod: 6, nl: "worden", fr: "devenir" },
+        { mod: 6, nl: "zien", fr: "voir" }, { mod: 6, nl: "zijn", fr: "être" },
+        { mod: 6, nl: "zingen", fr: "chanter" }, { mod: 6, nl: "zoeken", fr: "chercher" },
+        { mod: 6, nl: "zwemmen", fr: "nager" }
     ];
 
+    let activeWords = [];
     let currentWordIndex = 0;
     let score = 0;
     let total = 0;
@@ -233,9 +278,38 @@
     const totalEl = document.getElementById('total-count');
     const btnEl = document.getElementById('submit-btn');
 
+    function updateActiveWords() {
+        const checkboxes = document.querySelectorAll('.checkbox-label input');
+        let selectedModules = [];
+        
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                selectedModules.push(parseInt(cb.value));
+            }
+        });
+
+        activeWords = allWords.filter(word => selectedModules.includes(word.mod));
+
+        if (activeWords.length === 0) {
+            dutchWordEl.innerText = "Kies minstens 1 module!";
+            userInputEl.disabled = true;
+            btnEl.disabled = true;
+        } else {
+            userInputEl.disabled = false;
+            btnEl.disabled = false;
+            if (isChecked === false && feedbackEl.innerText === '') {
+                nextWord();
+            }
+        }
+    }
+
     function nextWord() {
-        currentWordIndex = Math.floor(Math.random() * words.length);
-        dutchWordEl.innerText = words[currentWordIndex].nl;
+        if (activeWords.length === 0) return;
+        // Lock de module selector tijdens een lopende vraag om bugs te voorkomen
+        document.querySelectorAll('.checkbox-label input').forEach(cb => cb.disabled = false);
+
+        currentWordIndex = Math.floor(Math.random() * activeWords.length);
+        dutchWordEl.innerHTML = `${activeWords[currentWordIndex].nl} <span style="font-size:14px; color:#94a3b8;">(Mod ${activeWords[currentWordIndex].mod})</span>`;
         userInputEl.value = '';
         feedbackEl.innerText = '';
         userInputEl.disabled = false;
@@ -249,14 +323,16 @@
         if (isChecked) {
             nextWord();
         } else {
-            checkAnswer();
+            if (activeWords.length > 0) checkAnswer();
         }
     }
 
-    // Functie om accenten te strippen voor een soepelere controle (optioneel, maar we eisen hier de exacte match of we controleren slim)
     function checkAnswer() {
+        // Blokkeer module wisselen tijdens feedback-status
+        document.querySelectorAll('.checkbox-label input').forEach(cb => cb.disabled = true);
+
         const userAnswer = userInputEl.value.trim().toLowerCase();
-        const correctAnswer = words[currentWordIndex].fr.toLowerCase();
+        const correctAnswer = activeWords[currentWordIndex].fr.toLowerCase();
 
         total++;
         userInputEl.disabled = true;
@@ -265,23 +341,25 @@
             score++;
             feedbackEl.innerHTML = '<span class="correct">Helemaal juist! 🎉</span>';
         } else {
-            feedbackEl.innerHTML = `<span class="wrong">Helaas! Het moest zijn: <strong>${words[currentWordIndex].fr}</strong></span>`;
+            feedbackEl.innerHTML = `<span class="wrong">Helaas! Het moest zijn: <strong>${activeWords[currentWordIndex].fr}</strong></span>`;
             wrongAnswers.push({
-                nl: words[currentWordIndex].nl,
-                fr: words[currentWordIndex].fr,
+                nl: activeWords[currentWordIndex].nl,
+                fr: activeWords[currentWordIndex].fr,
+                mod: activeWords[currentWordIndex].mod,
                 user: userAnswer || "(niets ingevuld)"
             });
         }
 
         scoreEl.innerText = score;
         totalEl.innerText = total;
-        btnEl.innerText = "Volgende vraag";
+        btnEl.innerText = "Druk op Enter voor het volgende woord";
         btnEl.style.backgroundColor = "#3498db";
         isChecked = true;
     }
 
     function endQuiz() {
         document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('module-selector-box').style.display = 'none';
         document.getElementById('results-area').style.display = 'block';
 
         document.getElementById('final-score').innerHTML = `Je hebt <strong>${score}</strong> van de <strong>${total}</strong> beantwoorde woorden goed!`;
@@ -294,23 +372,23 @@
 
         if (wrongAnswers.length === 0 && total > 0) {
             errorsTitleEl.style.display = 'none';
-            focusContainer.innerHTML = "<strong>Geweldig focus-advies:</strong> Foutloze score! Je kent deze gigantische lijst echt uitmuntend goed. Je bent helemaal klaar om zinnen te gaan bouwen en de werkwoorden te vervoegen.";
+            focusContainer.innerHTML = "<strong>Geweldig focus-advies:</strong> Foutloze score! Je kent de geselecteerde modules echt uitmuntend goed. Je kunt nu een extra module aanzetten om je grenzen te verleggen!";
         } else if (total === 0) {
             errorsTitleEl.style.display = 'none';
-            focusContainer.innerHTML = "Je hebt nog geen woorden ingevuld. Klik op de knop hieronder om alsnog te oefenen!";
+            focusContainer.innerHTML = "Je hebt nog geen woorden ingevuld. Start opnieuw en test je kennis!";
         } else {
             errorsTitleEl.style.display = 'block';
             wrongAnswers.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>${item.nl}</strong><br>Jouw antwoord: <span style="text-decoration: line-through; color: #c0392b;">${item.user}</span> ➡️ Juist: <strong style="color: #27ae60;">${item.fr}</strong>`;
+                li.innerHTML = `[Mod ${item.mod}] <strong>${item.nl}</strong><br>Jouw antwoord: <span style="text-decoration: line-through; color: #c0392b;">${item.user}</span> ➡️ Juist: <strong style="color: #27ae60;">${item.fr}</strong>`;
                 errorListEl.appendChild(li);
             });
 
             let foutPercentage = (wrongAnswers.length / total) * 100;
             if (foutPercentage > 40) {
-                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Omdat er veel nieuwe werkwoorden bij zitten is dit heel normaal! Tip: schrijf de Franse woorden met een 'dakje' of accent (zoals <i>répéter, protéger, connaître</i>) extra vaak op. Onthoud dat <strong>mettre</strong> voor heel veel Nederlandse woorden gebruikt wordt (aandoen, leggen, plaatsen, zetten)!";
+                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Het lijkt erop dat deze combinatie nog iets te groot is. Zet bij de volgende ronde eens <strong>slechts 1 module tegelijk</strong> aan. Als je één module helemaal foutloos kent, voeg je pas de volgende module toe. Stap voor stap werkt het best!";
             } else {
-                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Je bent er bijna! Je beheerst het grootste gedeelte al. Loop rustig de lijst hieronder door en let vooral op de spelling van de Franse werkwoorden die eindigen op <i>-ir</i> (zoals <i>finir, maigrir, grossir</i>) en <i>-re</i> (zoals <i>éteindre, joindre</i>). Je bent heel goed bezig!";
+                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Goed bezig, je beheerst deze modules al bijna! Bekijk de lijst hieronder en let goed op de spelling en accenten van de woorden die je miste. Test jezelf nog één keer op dezelfde modules om voor de 100% te gaan.";
             }
         }
     }
@@ -321,7 +399,8 @@
         }
     });
 
-    nextWord();
+    // Start setup
+    updateActiveWords();
 </script>
 
 </body>
