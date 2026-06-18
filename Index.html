@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen - V2</title>
+    <title>Franse Werkwoorden Oefenen - V3</title>
     <style>
         * {
             box-sizing: border-box;
@@ -335,7 +335,7 @@
         2: [
             { nl: "nemen", fr: "prendre" }, { nl: "antwoorden", fr: "répondre" }, { nl: "begrijpen", fr: "comprendre" },
             { nl: "dragen", fr: "porter" }, { nl: "koken", fr: "cuisiner" }, { nl: "leren", fr: "apprendre" },
-            { nl: "naar beneden gaan", fr: "descendre" }, { nl: "teruggeven", fr: "rendre" }, { nl: "verkopen", fr: "vendre" },
+            { nl: "naar beneden gaan", fr: "descendre" }, { nl: "teruggeven", fr: "rendering" }, { nl: "verkopen", fr: "vendre" },
             { nl: "verliezen", fr: "perdre" }, { nl: "wachten (op iem.)", fr: "attendre qqn" }
         ],
         3: [
@@ -387,7 +387,7 @@
     let wrongAnswers = [];
     let selectedModulesCount = 0;
     
-    // Track screen state: false = waiting for control, true = feedback displayed, waiting for Enter to advance
+    // false = waiting to check answer, true = showing evaluation feedback, waiting for Enter to continue
     let isShowingFeedbackState = false; 
 
     function startQuiz() {
@@ -421,9 +421,6 @@
         document.getElementById('quiz-screen').classList.remove('hidden');
         document.getElementById('end-screen').classList.add('hidden');
         
-        document.getElementById('feedback-container').classList.add('hidden');
-        document.getElementById('btn-controleren').innerText = "Controleer";
-        
         updateStats();
         showNextWord();
     }
@@ -440,12 +437,13 @@
         
         const inputField = document.getElementById('french-input');
         inputField.value = "";
-        inputField.disabled = false;
+        inputField.readOnly = false; // Keep editable and interactive
         inputField.focus();
 
         const fbContainer = document.getElementById('feedback-container');
         fbContainer.classList.add('hidden');
-        fbContainer.className = ""; // Reset custom feedback styles
+        fbContainer.innerText = "";
+        fbContainer.className = ""; 
         
         document.getElementById('btn-controleren').innerText = "Controleer";
         isShowingFeedbackState = false;
@@ -457,7 +455,7 @@
             currentWordIndex++;
             showNextWord();
         } else {
-            // First enter/click -> Evaluate and show correct/wrong message below
+            // First enter/click -> Check current word
             checkAnswerInline();
         }
     }
@@ -492,7 +490,7 @@
             fbContainer.innerText = `❌ Fout, het was: ${currentWord.fr}`;
         }
 
-        inputField.disabled = true;
+        inputField.readOnly = true; // Block typing but keep focusable so keypress events work perfectly
         updateStats();
         
         document.getElementById('btn-controleren').innerText = "Volgende (Druk Enter)";
@@ -516,7 +514,6 @@
         const adviceTitle = document.getElementById('advice-title');
         const adviceText = document.getElementById('advice-text');
 
-        // Highly enhanced pedagogical feedback
         if (scoreTotal === 0) {
             adviceTitle.innerText = "Geen gegevens beschikbaar 🔎";
             adviceText.innerText = "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test om een gerichte analyse te ontvangen.";
@@ -525,7 +522,7 @@
             adviceText.innerText = `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
         } else if (percent >= 80) {
             adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Kijk goed naar de gemisse woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
         } else if (percent >= 50) {
             adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
             adviceText.innerText = `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
@@ -560,8 +557,11 @@
         document.getElementById('start-screen').classList.remove('hidden');
     }
 
-    document.getElementById('french-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
+    // Capture enter globally on the document or inside input field safely
+    document.addEventListener('keydown', function(e) {
+        // Only trigger if the quiz screen is currently active
+        const quizScreenActive = !document.getElementById('quiz-screen').classList.contains('hidden');
+        if (e.key === 'Enter' && quizScreenActive) {
             handleInputSubmission();
         }
     });
