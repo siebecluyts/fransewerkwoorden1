@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen - V3</title>
+    <title>Franse Werkwoorden Oefenen</title>
     <style>
         * {
             box-sizing: border-box;
@@ -522,13 +522,13 @@
             adviceText.innerText = `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
         } else if (percent >= 80) {
             adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Kijk goed naar de gemisse woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemisse woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
         } else if (percent >= 50) {
             adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
-            adviceText.innerText = `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
+            adviceText.innerText = `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. Probeer je fouten te schrijven op een blad papier. Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
         } else {
             adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
-            adviceText.innerText = `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
+            adviceText.innerText = `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. Probeer je fouten te schrijven op een blad papier. Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
         }
 
         const errorListDiv = document.getElementById('error-list');
