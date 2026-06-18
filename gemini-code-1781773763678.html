@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De Ultieme Franse Werkwoorden Typ-Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 24px; }
+        p.subtitle { color: #7f8c8d; font-size: 14px; margin-top: 0; margin-bottom: 20px; }
+        .word-to-translate { font-size: 30px; font-weight: bold; color: #2980b9; margin: 20px 0; }
+        input[type="text"] {
+            width: 90%;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            outline: none;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-color: #2980b9; }
+        .btn-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        button {
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 95%;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        #submit-btn { background-color: #2ecc71; }
+        #end-btn { background-color: #e74c3c; }
+        .feedback { font-size: 18px; font-weight: bold; margin-top: 20px; min-height: 24px; }
+        .correct { color: #2ecc71; }
+        .wrong { color: #e74c3c; }
+        .score { font-size: 15px; color: #7f8c8d; margin-top: 15px; font-weight: 500; }
+        
+        /* Resultaten scherm styling */
+        .results-box {
+            text-align: left;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+        .results-box h2 { color: #2c3e50; font-size: 20px; margin-bottom: 5px; }
+        .error-list {
+            list-style-type: none;
+            padding: 0;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+        }
+        .error-list li {
+            padding: 10px;
+            background-color: #fdf2f2;
+            border-bottom: 1px solid #f9e2e2;
+            border-left: 4px solid #e74c3c;
+            font-size: 14px;
+        }
+        .error-list li:last-child { border-bottom: none; }
+        .focus-advice {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Franse Werkwoorden Oefenen</h1>
+    <p class="subtitle">Druk op Enter om te controleren én om door te gaan.</p>
+    
+    <div id="quiz-area">
+        <div class="score">Goed: <span id="score-count">0</span> | Totaal behandeld: <span id="total-count">0</span></div>
+        <div class="word-to-translate" id="dutch-word">Laden...</div>
+        
+        <input type="text" id="user-input" placeholder="Typ het Franse werkwoord..." autocomplete="off">
+        <br>
+        <div class="btn-container">
+            <button id="submit-btn" onclick="handleAction()">Controleer</button>
+            <button id="end-btn" onclick="endQuiz()">Stop & Toon Resultaten</button>
+        </div>
+        
+        <div class="feedback" id="feedback-msg"></div>
+    </div>
+    
+    <div id="results-area" class="results-box" style="display: none;">
+        <h2>Jouw Resultaten 📊</h2>
+        <p id="final-score"></p>
+        <div id="focus-container" class="focus-advice"></div>
+        <h3 id="errors-title" style="margin-top: 20px; font-size: 16px;">Foutjes om na te kijken:</h3>
+        <ul id="error-list" class="error-list"></ul>
+        <button onclick="location.reload()" style="background-color: #3498db; margin-top: 15px; width: 100%;">Opnieuw Starten</button>
+    </div>
+</div>
+
+<script>
+    // De complete, gigantische lijst met alle werkwoorden gecombineerd
+    const words = [
+        // Oorspronkelijke lijst
+        { nl: "aankomen", fr: "arriver" }, { nl: "nemen", fr: "prendre" },
+        { nl: "aankondigen", fr: "annoncer" }, { nl: "antwoorden", fr: "répondre" },
+        { nl: "beginnen", fr: "commencer" }, { nl: "begrijpen", fr: "comprendre" },
+        { nl: "bewegen", fr: "bouger" }, { nl: "dragen", fr: "porter" },
+        { nl: "bezoeken (iets)", fr: "visiter" }, { nl: "koken", fr: "cuisiner" },
+        { nl: "binnenkomen", fr: "entrer" }, { nl: "leren", fr: "apprendre" },
+        { nl: "blijven", fr: "rester" }, { nl: "naar beneden gaan", fr: "descendre" },
+        { nl: "chatten", fr: "chatter" }, { nl: "teruggeven", fr: "rendre" },
+        { nl: "dansen", fr: "danser" }, { nl: "verkopen", fr: "vendre" },
+        { nl: "delen", fr: "partager" }, { nl: "verliezen", fr: "perdre" },
+        { nl: "doen", fr: "faire" }, { nl: "wachten (op iem.)", fr: "attendre" },
+        { nl: "dol zijn op", fr: "adorer" }, { nl: "doorbrengen", fr: "passer" },
+        { nl: "duren", fr: "durer" }, { nl: "eten", fr: "manger" },
+        { nl: "gaan", fr: "aller" }, { nl: "geven", fr: "donner" },
+        { nl: "haten", fr: "détester" }, { nl: "hebben", fr: "avoir" },
+        { nl: "helpen", fr: "aider" }, { nl: "houden van", fr: "aimer" },
+        { nl: "huilen", fr: "pleurer" }, { nl: "wenen", fr: "pleurer" },
+        { nl: "kijken", fr: "regarder" }, { nl: "kijken (naar iets)", fr: "regarder" },
+        { nl: "komen", fr: "venir" }, { nl: "kunnen", fr: "pouvoir" },
+        { nl: "luisteren (naar iem.)", fr: "écouter" }, { nl: "maken", fr: "faire" },
+        { nl: "moeten", fr: "devoir" }, { nl: "mogen", fr: "pouvoir" },
+        { nl: "onthouden", fr: "retenir" }, { nl: "ontmoeten", fr: "rencontrer" },
+        { nl: "ontvangen", fr: "recevoir" }, { nl: "opladen", fr: "charger" },
+        { nl: "opruimen", fr: "ranger" }, { nl: "passeren", fr: "passer" },
+        { nl: "plaatsen", fr: "placer" }, { nl: "praten", fr: "parler" },
+        { nl: "rekenen", fr: "compter" }, { nl: "tellen", fr: "compter" },
+        { nl: "sluiten", fr: "fermer" }, { nl: "spelen", fr: "jouer" },
+        { nl: "studeren", fr: "étudier" }, { nl: "tekenen", fr: "dessiner" },
+        { nl: "terug naar huis gaan", fr: "rentrer" }, { nl: "terugkomen", fr: "revenir" },
+        { nl: "tonen", fr: "montrer" }, { nl: "uitspreken", fr: "prononcer" },
+        { nl: "uitvinden", fr: "inventer" }, { nl: "uitwissen", fr: "effacer" },
+        { nl: "vasthouden", fr: "tenir" }, { nl: "veranderen", fr: "changer" },
+        { nl: "verbeteren", fr: "corriger" }, { nl: "vergeten", fr: "oublier" },
+        { nl: "verhuizen", fr: "déménager" }, { nl: "verkiezen", fr: "préférer" },
+        { nl: "verplaatsen", fr: "déplacer" }, { nl: "vertellen", fr: "raconter" },
+        { nl: "vinden", fr: "trouver" }, { nl: "vragen", fr: "demander" },
+        { nl: "werken", fr: "travailler" }, { nl: "weten", fr: "savoir" },
+        { nl: "willen", fr: "vouloir" }, { nl: "winnen", fr: "gagner" },
+        { nl: "wonen", fr: "habiter" }, { nl: "worden", fr: "devenir" },
+        { nl: "zien", fr: "voir" }, { nl: "zijn", fr: "être" },
+        { nl: "zingen", fr: "chanter" }, { nl: "zoeken", fr: "chercher" },
+        { nl: "zwemmen", fr: "nager" },
+
+        // Nieuw toegevoegde werkwoorden
+        { nl: "(op)kloppen", fr: "battre" }, { nl: "eindigen", fr: "finir" },
+        { nl: "vertrekken", fr: "partir" }, { nl: "aanbieden", fr: "offrir" },
+        { nl: "beklagen", fr: "plaindre" }, { nl: "groter worden", fr: "grandir" },
+        { nl: "dienen, opdienen", fr: "servir" }, { nl: "aandoen / plaatsen / leggen / zetten", fr: "mettre" },
+        { nl: "bereiken", fr: "atteindre" }, { nl: "kiezen", fr: "choisir" },
+        { nl: "uitgaan, naar buiten gaan", fr: "sortir" }, { nl: "bedekken", fr: "couvrir" },
+        { nl: "beschermen", fr: "protéger" }, { nl: "kloppen", fr: "frapper" },
+        { nl: "slapen", fr: "dormir" }, { nl: "beëindigen", fr: "terminer" },
+        { nl: "betekenen", fr: "signifier" }, { nl: "nadenken", fr: "réfléchir" },
+        { nl: "voelen, ruiken", fr: "sentir" }, { nl: "beloven", fr: "promettre" },
+        { nl: "creëren", fr: "créer" }, { nl: "ontlenen", fr: "emprunter" },
+        { nl: "liegen", fr: "mentir" }, { nl: "beschrijven", fr: "décrire" },
+        { nl: "opmerken", fr: "remarquer" }, { nl: "breken", fr: "casser" },
+        { nl: "doven / uitdoen", fr: "éteindre" }, { nl: "roepen", fr: "crier" },
+        { nl: "gebruiken", fr: "utiliser" }, { nl: "fotograferen", fr: "photographier" },
+        { nl: "slagen", fr: "réussir" }, { nl: "gieten", fr: "verser" },
+        { nl: "herdoen", fr: "refaire" }, { nl: "stappen", fr: "marcher" },
+        { nl: "herhalen", fr: "répéter" }, { nl: "trekken", fr: "tirer" },
+        { nl: "lezen", fr: "lire" }, { nl: "hopen", fr: "espérer" },
+        { nl: "verdikken", fr: "grossir" }, { nl: "lijden", fr: "souffrir" },
+        { nl: "horen", fr: "entendre" }, { nl: "vermageren", fr: "maigrir" },
+        { nl: "markeren", fr: "surligner" }, { nl: "kopen", fr: "acheter" },
+        { nl: "versieren", fr: "décorer" }, { nl: "mengen", fr: "mélanger" },
+        { nl: "lijken op", fr: "ressembler" }, { nl: "voeden", fr: "nourrir" },
+        { nl: "ontdekken", fr: "découvrir" }, { nl: "logeren", fr: "loger" },
+        { nl: "vullen", fr: "remplir" }, { nl: "ontvangen / verwelkomen", fr: "accueillir" },
+        { nl: "ophangen", fr: "pendre" }, { nl: "waarschuwen", fr: "avertir" },
+        { nl: "openen", fr: "ouvrir" }, { nl: "organiseren", fr: "organiser" },
+        { nl: "optillen", fr: "enlever" }, { nl: "proberen", fr: "essayer" },
+        { nl: "samenvoegen / verbinden", fr: "joindre" }, { nl: "plukken", fr: "cueillir" },
+        { nl: "schilderen", fr: "peindre" }, { nl: "proeven", fr: "déguster" },
+        { nl: "schillen", fr: "éplucher" }, { nl: "transformeren", fr: "transformer" },
+        { nl: "schoonmaken", fr: "nettoyer" }, { nl: "schrijven", fr: "écrire" },
+        { nl: "uitleggen", fr: "expliquer" }, { nl: "smelten", fr: "fondre" },
+        { nl: "snijden", fr: "couper" }, { nl: "toestaan", fr: "permettre" },
+        { nl: "volledig maken", fr: "compléter" }, { nl: "toevoegen", fr: "ajouter" },
+        { nl: "voorbereiden", fr: "préparer" }, { nl: "voorstellen", fr: "suggerer" },
+        { nl: "voorverwarmen", fr: "préchauffer" }, { nl: "vrezen", fr: "craindre" },
+        { nl: "wassen", fr: "laver" }, { nl: "weggooien", fr: "jeter" },
+        { nl: "zeggen", fr: "dire" }
+    ];
+
+    let currentWordIndex = 0;
+    let score = 0;
+    let total = 0;
+    let isChecked = false;
+    let wrongAnswers = [];
+
+    const dutchWordEl = document.getElementById('dutch-word');
+    const userInputEl = document.getElementById('user-input');
+    const feedbackEl = document.getElementById('feedback-msg');
+    const scoreEl = document.getElementById('score-count');
+    const totalEl = document.getElementById('total-count');
+    const btnEl = document.getElementById('submit-btn');
+
+    function nextWord() {
+        currentWordIndex = Math.floor(Math.random() * words.length);
+        dutchWordEl.innerText = words[currentWordIndex].nl;
+        userInputEl.value = '';
+        feedbackEl.innerText = '';
+        userInputEl.disabled = false;
+        btnEl.innerText = "Controleer";
+        btnEl.style.backgroundColor = "#2ecc71";
+        isChecked = false;
+        userInputEl.focus();
+    }
+
+    function handleAction() {
+        if (isChecked) {
+            nextWord();
+        } else {
+            checkAnswer();
+        }
+    }
+
+    // Functie om accenten te strippen voor een soepelere controle (optioneel, maar we eisen hier de exacte match of we controleren slim)
+    function checkAnswer() {
+        const userAnswer = userInputEl.value.trim().toLowerCase();
+        const correctAnswer = words[currentWordIndex].fr.toLowerCase();
+
+        total++;
+        userInputEl.disabled = true;
+
+        if (userAnswer === correctAnswer) {
+            score++;
+            feedbackEl.innerHTML = '<span class="correct">Helemaal juist! 🎉</span>';
+        } else {
+            feedbackEl.innerHTML = `<span class="wrong">Helaas! Het moest zijn: <strong>${words[currentWordIndex].fr}</strong></span>`;
+            wrongAnswers.push({
+                nl: words[currentWordIndex].nl,
+                fr: words[currentWordIndex].fr,
+                user: userAnswer || "(niets ingevuld)"
+            });
+        }
+
+        scoreEl.innerText = score;
+        totalEl.innerText = total;
+        btnEl.innerText = "Volgende vraag";
+        btnEl.style.backgroundColor = "#3498db";
+        isChecked = true;
+    }
+
+    function endQuiz() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('results-area').style.display = 'block';
+
+        document.getElementById('final-score').innerHTML = `Je hebt <strong>${score}</strong> van de <strong>${total}</strong> beantwoorde woorden goed!`;
+
+        const errorListEl = document.getElementById('error-list');
+        const errorsTitleEl = document.getElementById('errors-title');
+        const focusContainer = document.getElementById('focus-container');
+
+        errorListEl.innerHTML = '';
+
+        if (wrongAnswers.length === 0 && total > 0) {
+            errorsTitleEl.style.display = 'none';
+            focusContainer.innerHTML = "<strong>Geweldig focus-advies:</strong> Foutloze score! Je kent deze gigantische lijst echt uitmuntend goed. Je bent helemaal klaar om zinnen te gaan bouwen en de werkwoorden te vervoegen.";
+        } else if (total === 0) {
+            errorsTitleEl.style.display = 'none';
+            focusContainer.innerHTML = "Je hebt nog geen woorden ingevuld. Klik op de knop hieronder om alsnog te oefenen!";
+        } else {
+            errorsTitleEl.style.display = 'block';
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${item.nl}</strong><br>Jouw antwoord: <span style="text-decoration: line-through; color: #c0392b;">${item.user}</span> ➡️ Juist: <strong style="color: #27ae60;">${item.fr}</strong>`;
+                errorListEl.appendChild(li);
+            });
+
+            let foutPercentage = (wrongAnswers.length / total) * 100;
+            if (foutPercentage > 40) {
+                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Omdat er veel nieuwe werkwoorden bij zitten is dit heel normaal! Tip: schrijf de Franse woorden met een 'dakje' of accent (zoals <i>répéter, protéger, connaître</i>) extra vaak op. Onthoud dat <strong>mettre</strong> voor heel veel Nederlandse woorden gebruikt wordt (aandoen, leggen, plaatsen, zetten)!";
+            } else {
+                focusContainer.innerHTML = "<strong>Focus-advies:</strong> Je bent er bijna! Je beheerst het grootste gedeelte al. Loop rustig de lijst hieronder door en let vooral op de spelling van de Franse werkwoorden die eindigen op <i>-ir</i> (zoals <i>finir, maigrir, grossir</i>) en <i>-re</i> (zoals <i>éteindre, joindre</i>). Je bent heel goed bezig!";
+            }
+        }
+    }
+
+    userInputEl.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            handleAction();
+        }
+    });
+
+    nextWord();
+</script>
+
+</body>
+</html>
