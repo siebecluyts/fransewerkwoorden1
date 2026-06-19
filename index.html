@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen</title>
+    <title>Franse Werkwoorden Oefenen - V5</title>
     <style>
         * {
             box-sizing: border-box;
@@ -305,6 +305,7 @@
 </div>
 
 <script>
+    // Database containing verbs for each module
     const verbDatabase = {
         1: [
             { nl: "aankomen", fr: "arriver" }, { nl: "aankondigen", fr: "annoncer" }, { nl: "beginnen", fr: "commencer" },
@@ -335,7 +336,7 @@
         2: [
             { nl: "nemen", fr: "prendre" }, { nl: "antwoorden", fr: "répondre" }, { nl: "begrijpen", fr: "comprendre" },
             { nl: "dragen", fr: "porter" }, { nl: "koken", fr: "cuisiner" }, { nl: "leren", fr: "apprendre" },
-            { nl: "naar beneden gaan", fr: "descendre" }, { nl: "teruggeven", fr: "rendering" }, { nl: "verkopen", fr: "vendre" },
+            { nl: "naar beneden gaan", fr: "descendre" }, { nl: "teruggeven", fr: "rendre" }, { nl: "verkopen", fr: "vendre" },
             { nl: "verliezen", fr: "perdre" }, { nl: "wachten (op iem.)", fr: "attendre qqn" }
         ],
         3: [
@@ -385,20 +386,40 @@
     let scoreCorrect = 0;
     let scoreTotal = 0;
     let wrongAnswers = [];
-    let selectedModulesCount = 0;
-    
-    // false = waiting to check answer, true = showing evaluation feedback, waiting for Enter to continue
+    let selectedModules = [];
+
     let isShowingFeedbackState = false; 
+
+    // Helper to check small typos (Levenshtein Distance)
+    function getLevenshteinDistance(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
 
     function startQuiz() {
         const checkboxes = document.querySelectorAll('.mod-checkbox');
         activePool = [];
-        selectedModulesCount = 0;
+        selectedModules = [];
 
         checkboxes.forEach(cb => {
             if (cb.checked) {
                 const modId = parseInt(cb.value);
-                selectedModulesCount++;
+                selectedModules.push(modId);
                 verbDatabase[modId].forEach(item => {
                     activePool.push({ ...item, mod: modId });
                 });
@@ -437,7 +458,7 @@
         
         const inputField = document.getElementById('french-input');
         inputField.value = "";
-        inputField.readOnly = false; // Keep editable and interactive
+        inputField.readOnly = false;
         inputField.focus();
 
         const fbContainer = document.getElementById('feedback-container');
@@ -451,11 +472,9 @@
 
     function handleInputSubmission() {
         if (isShowingFeedbackState) {
-            // Second enter/click -> Advance to next word
             currentWordIndex++;
             showNextWord();
         } else {
-            // First enter/click -> Check current word
             checkAnswerInline();
         }
     }
@@ -480,17 +499,31 @@
             fbContainer.className = "feedback-inline feedback-correct";
             fbContainer.innerText = "✓ Goed gedaan!";
         } else {
+            // Determine if it's just a tiny typo (1 letter off)
+            let isTypo = false;
+            correctAnswers.forEach(correctStr => {
+                if (getLevenshteinDistance(userInput, correctStr) === 1) {
+                    isTypo = true;
+                }
+            });
+
             wrongAnswers.push({
                 nl: currentWord.nl,
                 correct: currentWord.fr,
                 user: userInput || "(leeg)",
-                mod: currentWord.mod
+                mod: currentWord.mod,
+                isTypo: isTypo
             });
+            
             fbContainer.className = "feedback-inline feedback-wrong";
-            fbContainer.innerText = `❌ Fout, het was: ${currentWord.fr}`;
+            if (isTypo) {
+                fbContainer.innerText = `❌ Bijna! Slechts 1 letter fout. Het moet zijn: ${currentWord.fr}`;
+            } else {
+                fbContainer.innerText = `❌ Fout, het was: ${currentWord.fr}`;
+            }
         }
 
-        inputField.readOnly = true; // Block typing but keep focusable so keypress events work perfectly
+        inputField.readOnly = true;
         updateStats();
         
         document.getElementById('btn-controleren').innerText = "Volgende (Druk Enter)";
@@ -514,21 +547,43 @@
         const adviceTitle = document.getElementById('advice-title');
         const adviceText = document.getElementById('advice-text');
 
+        const activeModulesStr = selectedModules.map(m => `Module ${m}`).join(', ');
+        const wrongVerbsCount = wrongAnswers.length;
+        const typoCount = wrongAnswers.filter(w => w.isTypo).length;
+        const realErrorsCount = wrongVerbsCount - typoCount;
+
+        let dynamicSummary = `<p style="margin-top: 0; line-height: 1.5;"><strong>Geselecteerde modules:</strong> ${activeModulesStr}<br>` +
+                             `<strong>Resultaat:</strong> ${scoreCorrect} juist en ${wrongVerbsCount} fout van de ${scoreTotal} geteste woorden.<br>` +
+                             `<em>(Waarvan ${typoCount} kleine letterfout(en) en ${realErrorsCount} echt verkeerd ingevulde woorden)</em></p>`;
+
+        // Smart, granular condition blocks based on your feedback
         if (scoreTotal === 0) {
             adviceTitle.innerText = "Geen gegevens beschikbaar 🔎";
-            adviceText.innerText = "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test om een gerichte analyse te ontvangen.";
+            adviceText.innerHTML = dynamicSummary + "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test om een gerichte analyse te ontvangen.";
         } else if (percent === 100) {
             adviceTitle.innerText = "Uitzonderlijke prestatie! 🏆";
-            adviceText.innerText = `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
+            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
+        } else if (wrongVerbsCount === 1 && typoCount === 1) {
+            // Exactly 1 error total, and it was just a 1-letter typo!
+            adviceTitle.innerText = "Zó dichtbij! Slechts één letterfoutje 😭✨";
+            adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een 10/10 haalt met een klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
+        } else if (wrongVerbsCount === 1) {
+            // Exactly 1 mistake, but a real vocabulary gap
+            adviceTitle.innerText = "Bijna perfect! Slechts 1 woord gemist 🎯";
+            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, en haal direct die felbegeerde 100% in je volgende ronde!`;
+        } else if (percent >= 80 && realErrorsCount === 0) {
+            // High score, but ALL mistakes are tiny typos
+            adviceTitle.innerText = "Franse betekenissen top, let op spelling! ✍️";
+            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
         } else if (percent >= 80) {
             adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerText = `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes. Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemisse woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes (${wrongVerbsCount} fouten in totaal). Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
         } else if (percent >= 50) {
             adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
-            adviceText.innerText = `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. Probeer je fouten te schrijven op een blad papier. Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
+            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
         } else {
             adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
-            adviceText.innerText = `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. Probeer je fouten te schrijven op een blad papier. Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
+            adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
         }
 
         const errorListDiv = document.getElementById('error-list');
@@ -542,9 +597,10 @@
             wrongAnswers.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = "error-item";
+                const typoLabel = item.isTypo ? " <b style='color:#b45309; background:#fef3c7; padding:2px 6px; border-radius:4px; font-size:11px;'>1 letter fout!</b>" : "";
                 itemDiv.innerHTML = `
                     <span class="mod">[Mod ${item.mod}]</span> 
-                    <span class="dutch">${item.nl}</span><br>
+                    <span class="dutch">${item.nl}</span>${typoLabel}<br>
                     Jouw antwoord: <span class="wrong">${item.user}</span> ➡️ Juist: <span class="correct">${item.correct}</span>
                 `;
                 errorListDiv.appendChild(itemDiv);
@@ -557,9 +613,7 @@
         document.getElementById('start-screen').classList.remove('hidden');
     }
 
-    // Capture enter globally on the document or inside input field safely
     document.addEventListener('keydown', function(e) {
-        // Only trigger if the quiz screen is currently active
         const quizScreenActive = !document.getElementById('quiz-screen').classList.contains('hidden');
         if (e.key === 'Enter' && quizScreenActive) {
             handleInputSubmission();
