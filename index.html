@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen - V5</title>
+    <title>Franse Werkwoorden Oefenen - V6</title>
     <style>
         * {
             box-sizing: border-box;
@@ -305,7 +305,6 @@
 </div>
 
 <script>
-    // Database containing verbs for each module
     const verbDatabase = {
         1: [
             { nl: "aankomen", fr: "arriver" }, { nl: "aankondigen", fr: "annoncer" }, { nl: "beginnen", fr: "commencer" },
@@ -355,7 +354,7 @@
         ],
         4: [
             { nl: "aankondigen", fr: "annoncer" }, { nl: "beklagen", fr: "plaindre" }, { nl: "bereiken", fr: "atteindre" },
-            { nl: "beschermen", fr: "protéger" }, { nl: "betekenen", fr: "signifier" }, { nl: "creëren", fr: "créer" },
+            { nl: "beschermen", fr: "protéger" }, { nl: "betekenen", fr: "signifier" }, { nl: "creëren", fr: "creer" },
             { nl: "delen", fr: "partager" }, { nl: "doven", fr: "éteindre" }, { nl: "fotograferen", fr: "photographier" },
             { nl: "herdoen", fr: "refaire" }, { nl: "herhalen", fr: "répéter" }, { nl: "hopen", fr: "espérer" },
             { nl: "horen", fr: "entendre" }, { nl: "kopen", fr: "acheter" }, { nl: "lijken op", fr: "ressembler" },
@@ -387,10 +386,8 @@
     let scoreTotal = 0;
     let wrongAnswers = [];
     let selectedModules = [];
-
     let isShowingFeedbackState = false; 
 
-    // Helper to check small typos (Levenshtein Distance)
     function getLevenshteinDistance(a, b) {
         const matrix = [];
         for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -499,7 +496,6 @@
             fbContainer.className = "feedback-inline feedback-correct";
             fbContainer.innerText = "✓ Goed gedaan!";
         } else {
-            // Determine if it's just a tiny typo (1 letter off)
             let isTypo = false;
             correctAnswers.forEach(correctStr => {
                 if (getLevenshteinDistance(userInput, correctStr) === 1) {
@@ -547,7 +543,11 @@
         const adviceTitle = document.getElementById('advice-title');
         const adviceText = document.getElementById('advice-text');
 
+        const isSingleModule = selectedModules.length === 1;
         const activeModulesStr = selectedModules.map(m => `Module ${m}`).join(', ');
+        const targetContextStr = isSingleModule ? `<strong>Module ${selectedModules[0]}</strong>` : `deze combinatie van modules (${activeModulesStr})`;
+        const targetScopeWord = isSingleModule ? `deze module` : `deze modules`;
+
         const wrongVerbsCount = wrongAnswers.length;
         const typoCount = wrongAnswers.filter(w => w.isTypo).length;
         const realErrorsCount = wrongVerbsCount - typoCount;
@@ -556,34 +556,37 @@
                              `<strong>Resultaat:</strong> ${scoreCorrect} juist en ${wrongVerbsCount} fout van de ${scoreTotal} geteste woorden.<br>` +
                              `<em>(Waarvan ${typoCount} kleine letterfout(en) en ${realErrorsCount} echt verkeerd ingevulde woorden)</em></p>`;
 
-        // Smart, granular condition blocks based on your feedback
+        // Perfect contextualized feedback addressing exactly how many modules were selected
         if (scoreTotal === 0) {
             adviceTitle.innerText = "Geen gegevens beschikbaar 🔎";
-            adviceText.innerHTML = dynamicSummary + "Je hebt nog geen woorden beantwoord. Kies een paar modules en start de test om een gerichte analyse te ontvangen.";
+            adviceText.innerHTML = dynamicSummary + "Je hebt nog geen woorden beantwoord. Kies een module en start de test om een gerichte analyse te ontvangen.";
         } else if (percent === 100) {
             adviceTitle.innerText = "Uitzonderlijke prestatie! 🏆";
-            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst de geselecteerde modules volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
+            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst ${targetContextStr} volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
         } else if (wrongVerbsCount === 1 && typoCount === 1) {
-            // Exactly 1 error total, and it was just a 1-letter typo!
             adviceTitle.innerText = "Zó dichtbij! Slechts één letterfoutje 😭✨";
-            adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een 10/10 haalt met een klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
+            adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen van ${targetContextStr} perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een topcijfer haalt met een heel klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
         } else if (wrongVerbsCount === 1) {
-            // Exactly 1 mistake, but a real vocabulary gap
             adviceTitle.innerText = "Bijna perfect! Slechts 1 woord gemist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, en haal direct die felbegeerde 100% in je volgende ronde!`;
+            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos binnen ${targetContextStr}. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, en haal direct die felbegeerde 100% in je volgende ronde!`;
         } else if (percent >= 80 && realErrorsCount === 0) {
-            // High score, but ALL mistakes are tiny typos
             adviceTitle.innerText = "Franse betekenissen top, let op spelling! ✍️";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
+            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis binnen ${targetContextStr} helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
         } else if (percent >= 80) {
             adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit de basis er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes (${wrongVerbsCount} fouten in totaal). Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit de basis voor ${targetContextStr} er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes (${wrongVerbsCount} fouten in totaal). Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
         } else if (percent >= 50) {
             adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%), een prima start! Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Probeer ook eens om maximaal 1 of 2 modules tegelijk aan te zetten zodat je gerichter leert.`;
+            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%) voor ${targetContextStr}, een prima start! Je had ${scoreCorrect} werkwoorden juist en ${wrongVerbsCount} fouten. Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Blader nog eens rustig door de lijst.`;
         } else {
-            adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
-            adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
+            // High error count context
+            if (isSingleModule) {
+                adviceTitle.innerText = "Focus op deze module vereist 💡";
+                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat de woordenschat van ${targetContextStr} op dit moment nog iets te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: neem de lijst van deze specifieke module rustig door. <strong>Probeer je fouten een aantal keer op een blad papier te schrijven.</strong> Herhaling in kleine stapjes werkt het allerbest!`;
+            } else {
+                adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
+                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
+            }
         }
 
         const errorListDiv = document.getElementById('error-list');
