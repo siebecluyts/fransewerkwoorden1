@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen - V16</title>
+    <title>Franse Werkwoorden Oefenen - V17</title>
     <style>
         * {
             box-sizing: border-box;
@@ -91,8 +91,18 @@
             font-size: 28px;
             color: #2563eb;
             font-weight: 700;
-            margin: 20px 0;
+            margin: 20px 0 10px 0;
             line-height: 1.3;
+        }
+        .form-indicator {
+            font-size: 18px;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 15px;
+            background-color: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 6px;
+            display: inline-block;
         }
         .tense-badge {
             display: block;
@@ -297,6 +307,8 @@
             <span id="dutch-word">...</span><span id="mod-badge" class="mod-badge">(Mod 1)</span>
             <div id="tense-badge" class="tense-badge hidden">Présent</div>
         </div>
+
+        <div id="form-indicator" class="form-indicator hidden">Vorm: <strong>...</strong></div>
         
         <input type="text" id="french-input" class="input-field" placeholder="Typ het antwoord..." autocomplete="off">
         
@@ -413,6 +425,15 @@
         "prendre": { "Indicatif présent (je)": "prends", "Indicatif présent (nous)": "prenons", "Indicatif présent (ils)": "prennent", "Passé composé (j')": "ai pris", "Passé récent (je)": "viens de prendre", "Futur proche (je)": "vais prendre", "Impératif (tu)": "prends", "Impératif (vous)": "prenez" }
     };
 
+    const pronounTranslations = {
+        "je": "je / j' (ik)",
+        "j'": "je / j' (ik)",
+        "tu": "tu (jij)",
+        "nous": "nous (we / wij)",
+        "vous": "vous (jullie / u)",
+        "ils": "ils (zij)"
+    };
+
     function getFrenchConjugation(inf, tenseInfo) {
         let baseInf = inf.split(' ')[0].trim().toLowerCase();
         if (hardcodedConjugations[baseInf] && hardcodedConjugations[baseInf][tenseInfo]) {
@@ -510,13 +531,15 @@
                     if (expectedForm) {
                         let cleanAnswer = expectedForm.replace(/^(je |j'|j’|suis |ai |viens de |viens d'|vais )/i, "").trim();
                         let pronounLabel = chosenForm.match(/\(([^)]+)\)/)[1];
+                        let fullPronounText = pronounTranslations[pronounLabel] || pronounLabel;
 
                         currentQuizList.push({
-                            nl: `Vervoeging van: <strong style="color:#2563eb;">${item.nl}</strong> (${pronounLabel}-vorm)`,
+                            nl: `Verveeg het werkwoord: <strong style="color:#2563eb;">${item.nl}</strong>`,
                             fr: cleanAnswer,
                             mod: item.mod,
                             quizType: "vervoeging",
-                            tense: tense
+                            tense: tense,
+                            pronoun: fullPronounText
                         });
                     }
                 });
@@ -549,14 +572,20 @@
         document.getElementById('mod-badge').innerText = `(Mod ${currentWord.mod})`;
         
         const tenseBadge = document.getElementById('tense-badge');
+        const formIndicator = document.getElementById('form-indicator');
         const subtitle = document.getElementById('quiz-subtitle');
 
         if (currentWord.quizType === "vervoeging") {
             tenseBadge.innerText = currentWord.tense;
             tenseBadge.classList.remove('hidden');
-            subtitle.innerText = "Vul alleen de juiste werkwoordsvorm in (zonder je/j'/nous/enz).";
+            
+            formIndicator.innerHTML = `In te vullen vorm: <strong>${currentWord.pronoun}</strong>`;
+            formIndicator.classList.remove('hidden');
+            
+            subtitle.innerText = "Vul alleen de juiste werkwoordsvorm in (zonder het persoonlijk voornaamwoord).";
         } else {
             tenseBadge.classList.add('hidden');
+            formIndicator.classList.add('hidden');
             subtitle.innerText = "Vul de juiste vertaling in en druk op Enter.";
         }
         
@@ -607,7 +636,7 @@
             });
 
             wrongAnswers.push({
-                nl: currentWord.nl,
+                nl: currentWord.nl + (currentWord.pronoun ? ` (${currentWord.pronoun})` : ""),
                 correct: currentWord.fr,
                 user: userInput || "(leeg)",
                 mod: currentWord.mod,
@@ -665,7 +694,7 @@
             adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen van ${targetContextStr} perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een topcijfer haalt met een heel klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
         } else if (wrongVerbsCount === 1) {
             adviceTitle.innerText = "Bijna perfect! Slechts 1 woord gemist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos binnen ${targetContextStr}. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, en haal direct die felbegeerde 100% in je volgende ronde!`;
+            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos binnen ${targetContextStr}. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, and haal direct die felbegeerde 100% in je volgende ronde!`;
         } else if (percent >= 80 && realErrorsCount === 0) {
             adviceTitle.innerText = "Franse betekenissen top, let op spelling! ✍️";
             adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis binnen ${targetContextStr} helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
