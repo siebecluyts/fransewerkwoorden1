@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Werkwoorden Oefenen - V6</title>
+    <title>Franse Werkwoorden Oefenen - V7</title>
     <style>
         * {
             box-sizing: border-box;
@@ -60,6 +60,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+            margin-bottom: 16px;
         }
         .checkbox-label {
             display: flex;
@@ -76,6 +77,11 @@
             accent-color: #2563eb;
             cursor: pointer;
         }
+        .divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 16px 0;
+        }
         .stats {
             font-size: 14px;
             color: #64748b;
@@ -83,10 +89,23 @@
             font-weight: 500;
         }
         .word-to-translate {
-            font-size: 28px;
+            font-size: 26px;
             color: #2563eb;
             font-weight: 700;
             margin: 20px 0;
+            line-height: 1.4;
+        }
+        .tense-badge {
+            display: block;
+            font-size: 13px;
+            color: #ea580c;
+            background-color: #fff7ed;
+            border: 1px solid #ffedd5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            width: max-content;
+            margin: 8px auto 0 auto;
+            font-weight: 600;
         }
         .word-to-translate span.mod-badge {
             font-size: 12px;
@@ -237,10 +256,9 @@
 <body>
 
 <div class="container">
-    <!-- SCREEN 1: START / MODULE CHOOSER -->
     <div id="start-screen">
         <h1>Franse Werkwoorden Oefenen</h1>
-        <div class="subtitle">Selecteer je modules en druk op Start om te oefenen.</div>
+        <div class="subtitle">Selecteer je modules, kies je opties en druk op Start.</div>
         
         <div class="card">
             <div class="card-title">Kies welke modules je wilt oefenen:</div>
@@ -252,15 +270,25 @@
                 <label class="checkbox-label"><input type="checkbox" class="mod-checkbox" value="5" checked> Module 5</label>
                 <label class="checkbox-label"><input type="checkbox" class="mod-checkbox" value="6" checked> Module 6</label>
             </div>
+
+            <div class="divider"></div>
+
+            <div class="card-title">Extra oefenopties:</div>
+            <label class="checkbox-label">
+                <input type="checkbox" id="conjugation-checkbox">
+                <strong>Vraag ook naar vervoegingen ✍️</strong>
+            </label>
+            <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 24px; line-height: 1.4;">
+                Vraagt willekeurige vormen in: <em>Indicatif présent, Passé composé, Passé récent, Impératif</em> en <em>Futur proche</em>.
+            </p>
         </div>
         
         <button class="btn btn-secondary" onclick="startQuiz()">Start Oefenen</button>
     </div>
 
-    <!-- SCREEN 2: QUIZ INTERFACE -->
     <div id="quiz-screen" class="hidden">
         <h1>Franse Werkwoorden Oefenen</h1>
-        <div class="subtitle">Vul de juiste vertaling in en druk op Enter.</div>
+        <div class="subtitle" id="quiz-subtitle">Vul de juiste vertaling in en druk op Enter.</div>
         
         <div class="stats">
             Goed: <span id="stat-correct">0</span> | Totaal behandeld: <span id="stat-total">0</span>
@@ -268,9 +296,10 @@
         
         <div class="word-to-translate">
             <span id="dutch-word">...</span><span id="mod-badge" class="mod-badge">(Mod 1)</span>
+            <div id="tense-badge" class="tense-badge hidden">Indicatif présent</div>
         </div>
         
-        <input type="text" id="french-input" class="input-field" placeholder="Typ het Franse werkwoord..." autocomplete="off">
+        <input type="text" id="french-input" class="input-field" placeholder="Typ het antwoord..." autocomplete="off">
         
         <div id="feedback-container" class="hidden"></div>
         
@@ -278,14 +307,13 @@
         <button class="btn btn-danger" onclick="stopQuiz()">Stop & Toon Resultaten</button>
     </div>
 
-    <!-- SCREEN 3: ENDSCREEN -->
     <div id="end-screen" class="hidden">
         <h1>Franse Werkwoorden Oefenen</h1>
         <div class="subtitle">Overzicht en analyse van je prestaties.</div>
         
         <div class="result-heading">Jouw Resultaten 📊</div>
         <div class="result-text">
-            Je hebt <strong id="res-correct">0</strong> van de <strong id="res-total">0</strong> beantwoorde woorden goed! (<strong id="res-percent">0%</strong>)
+            Je hebt <strong id="res-correct">0</strong> van de <strong id="res-total">0</strong> beantwoorde vragen goed! (<strong id="res-percent">0%</strong>)
         </div>
         
         <div class="advice-box">
@@ -296,16 +324,12 @@
         <div id="error-container">
             <div class="error-section-title">Foutjes om na te kijken:</div>
             <div class="error-list" id="error-list">
-                <!-- Erroneous words dynamically inserted here -->
-            </div>
+                </div>
         </div>
         
         <button class="btn btn-secondary" onclick="restartQuiz()">Opnieuw Oefenen</button>
     </div>
-    <p style="
-    text-align: center;
-    color: grey;
-    ">Site gemaakt door <a href="https://github.com/siebecluyts">Siebe Cluyts</a>. Werkwoorden en modules van Audace1, Polpo</p>
+    <p style="text-align: center; color: grey;">Site gemaakt door <a href="https://github.com/siebecluyts">Siebe Cluyts</a>. Werkwoorden en modules van Audace1, Polpo</p>
 </div>
 
 <script>
@@ -383,6 +407,177 @@
         ]
     };
 
+    // Vaste data voor veelvoorkomende onregelmatige basiswerkwoorden uit de modules
+    const hardcodedConjugations = {
+        "faire": {
+            "Indicatif présent (je)": "fais", "Indicatif présent (nous)": "faisons", "Indicatif présent (ils)": "font",
+            "Passé composé (j')": "ai fait", "Passé récent (je)": "viens de faire", "Futur proche (je)": "vais faire",
+            "Impératif (tu-vorm)": "fais", "Impératif (vous-vorm)": "faites"
+        },
+        "aller": {
+            "Indicatif présent (je)": "vais", "Indicatif présent (nous)": "allons", "Indicatif présent (ils)": "vont",
+            "Passé composé (je)": "suis allé", "Passé récent (je)": "viens d'aller", "Futur proche (je)": "vais aller",
+            "Impératif (tu-vorm)": "va", "Impératif (vous-vorm)": "allez"
+        },
+        "avoir": {
+            "Indicatif présent (j')": "ai", "Indicatif présent (nous)": "avons", "Indicatif présent (ils)": "ont",
+            "Passé composé (j')": "ai eu", "Passé récent (je)": "viens d'avoir", "Futur proche (je)": "vais avoir",
+            "Impératif (tu-vorm)": "aie", "Impératif (vous-vorm)": "ayez"
+        },
+        "être": {
+            "Indicatif présent (je)": "suis", "Indicatif présent (nous)": "sommes", "Indicatif présent (ils)": "sont",
+            "Passé composé (j')": "ai été", "Passé récent (je)": "viens d'être", "Futur proche (je)": "vais être",
+            "Impératif (tu-vorm)": "sois", "Impératif (vous-vorm)": "soyez"
+        },
+        "prendre": {
+            "Indicatif présent (je)": "prends", "Indicatif présent (nous)": "prenons", "Indicatif présent (ils)": "prennent",
+            "Passé composé (j')": "ai pris", "Passé récent (je)": "viens de prendre", "Futur proche (je)": "vais prendre",
+            "Impératif (tu-vorm)": "prends", "Impératif (vous-vorm)": "prenez"
+        },
+        "comprendre": {
+            "Indicatif présent (je)": "comprends", "Indicatif présent (nous)": "comprenons", "Indicatif présent (ils)": "comprennent",
+            "Passé composé (j')": "ai compris", "Passé récent (je)": "viens de comprendre", "Futur proche (je)": "vais comprendre",
+            "Impératif (tu-vorm)": "comprends", "Impératif (vous-vorm)": "comprenez"
+        },
+        "apprendre": {
+            "Indicatif présent (je)": "apprends", "Indicatif présent (nous)": "apprenons", "Indicatif présent (ils)": "apprennent",
+            "Passé composé (j')": "ai appris", "Passé récent (je)": "viens d'apprendre", "Futur proche (je)": "vais apprendre",
+            "Impératif (tu-vorm)": "apprends", "Impératif (vous-vorm)": "apprenez"
+        },
+        "venir": {
+            "Indicatif présent (je)": "viens", "Indicatif présent (nous)": "venons", "Indicatif présent (ils)": "viennent",
+            "Passé composé (je)": "suis venu", "Passé récent (je)": "viens de venir", "Futur proche (je)": "vais venir",
+            "Impératif (tu-vorm)": "viens", "Impératif (vous-vorm)": "venez"
+        },
+        "revenir": {
+            "Indicatif présent (je)": "reviens", "Indicatif présent (nous)": "revenons", "Indicatif présent (ils)": "reviennent",
+            "Passé composé (je)": "suis revenu", "Passé récent (je)": "viens de revenir", "Futur proche (je)": "vais revenir",
+            "Impératif (tu-vorm)": "reviens", "Impératif (vous-vorm)": "revenez"
+        },
+        "devenir": {
+            "Indicatif présent (je)": "deviens", "Indicatif présent (nous)": "devenons", "Indicatif présent (ils)": "deviennent",
+            "Passé composé (je)": "suis devenu", "Passé récent (je)": "viens de devenir", "Futur proche (je)": "vais devenir",
+            "Impératif (tu-vorm)": "deviens", "Impératif (vous-vorm)": "devenez"
+        },
+        "devoir": {
+            "Indicatif présent (je)": "dois", "Indicatif présent (nous)": "devons", "Indicatif présent (ils)": "doivent",
+            "Passé composé (j')": "ai dû", "Passé récent (je)": "viens de devoir", "Futur proche (je)": "vais devoir",
+            "Impératif (tu-vorm)": "dois", "Impératif (vous-vorm)": "devez"
+        },
+        "pouvoir": {
+            "Indicatif présent (je)": "peux", "Indicatif présent (nous)": "pouvons", "Indicatif présent (ils)": "peuvent",
+            "Passé composé (j')": "ai pu", "Passé récent (je)": "viens de pouvoir", "Futur proche (je)": "vais pouvoir",
+            "Impératif (tu-vorm)": "peux", "Impératif (vous-vorm)": "pouvez"
+        },
+        "savoir": {
+            "Indicatif présent (je)": "sais", "Indicatif présent (nous)": "savons", "Indicatif présent (ils)": "savent",
+            "Passé composé (j')": "ai su", "Passé récent (je)": "viens de savoir", "Futur proche (je)": "vais savoir",
+            "Impératif (tu-vorm)": "sais", "Impératif (vous-vorm)": "savez"
+        },
+        "vouloir": {
+            "Indicatif présent (je)": "veux", "Indicatif présent (nous)": "voulons", "Indicatif présent (ils)": "veulent",
+            "Passé composé (j')": "ai voulu", "Passé récent (je)": "viens de vouloir", "Futur proche (je)": "vais vouloir",
+            "Impératif (tu-vorm)": "veux", "Impératif (vous-vorm)": "voulez"
+        },
+        "voir": {
+            "Indicatif présent (je)": "vois", "Indicatif présent (nous)": "voyons", "Indicatif présent (ils)": "voient",
+            "Passé composé (j')": "ai vu", "Passé récent (je)": "viens de voir", "Futur proche (je)": "vais voir",
+            "Impératif (tu-vorm)": "vois", "Impératif (vous-vorm)": "voyez"
+        },
+        "lire": {
+            "Indicatif présent (je)": "lis", "Indicatif présent (nous)": "lisons", "Indicatif présent (ils)": "lisent",
+            "Passé composé (j')": "ai lu", "Passé récent (je)": "viens de lire", "Futur proche (je)": "vais lire",
+            "Impératif (tu-vorm)": "lis", "Impératif (vous-vorm)": "lisez"
+        },
+        "dire": {
+            "Indicatif présent (je)": "dis", "Indicatif présent (nous)": "disons", "Indicatif présent (ils)": "disent",
+            "Passé composé (j')": "ai dit", "Passé récent (je)": "viens de dire", "Futur proche (je)": "vais dire",
+            "Impératif (tu-vorm)": "dis", "Impératif (vous-vorm)": "dites"
+        },
+        "écrire": {
+            "Indicatif présent (je)": "écris", "Indicatif présent (nous)": "écrivons", "Indicatif présent (ils)": "écrivent",
+            "Passé composé (j')": "ai écrit", "Passé récent (je)": "viens d'écrire", "Futur proche (je)": "vais écrire",
+            "Impératif (tu-vorm)": "écris", "Impératif (vous-vorm)": "écrivez"
+        }
+    };
+
+    // Slimme dynamische generator voor alle regelmatige werkwoorden (-er, -ir, -re) uit de lijsten
+    function getFrenchConjugation(inf, tenseInfo) {
+        // Strip eventuele extra aanhangsels zoals "qqc" of "qqn" eraf
+        let baseInf = inf.split(' ')[0].trim().toLowerCase();
+        
+        if (hardcodedConjugations[baseInf] && hardcodedConjugations[baseInf][tenseInfo]) {
+            return hardcodedConjugations[baseInf][tenseInfo];
+        }
+
+        // Basisregels voor regelmatige -er werkwoorden (Module 1, 3, 4)
+        if (baseInf.endsWith("er")) {
+            let stem = baseInf.slice(0, -2);
+            let isVowel = /^[aeiouéh]/.test(baseInf);
+            
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") {
+                return isVowel ? "j'" + stem + "e" : "je " + stem + "e";
+            }
+            if (tenseInfo === "Indicatif présent (nous)") {
+                if (baseInf.endsWith("ger")) return stem + "eons"; // nager -> nageons
+                if (baseInf.endsWith("cer")) return stem.slice(0, -1) + "çons"; // commencer -> commençons
+                return stem + "ons";
+            }
+            if (tenseInfo === "Indicatif présent (ils)") return stem + "ent";
+            if (tenseInfo === "Passé composé (j')") return "ai " + stem + "é";
+            if (tenseInfo === "Passé composé (je)") return isVowel ? "j'ai " + stem + "é" : "je suis " + stem + "é"; 
+            if (tenseInfo === "Passé récent (je)") return isVowel ? "viens d'" + baseInf : "viens de " + baseInf;
+            if (tenseInfo === "Futur proche (je)") return "vais " + baseInf;
+            if (tenseInfo === "Impératif (tu-vorm)") return stem + "e";
+            if (tenseInfo === "Impératif (vous-vorm)") return stem + "ez";
+        }
+
+        // Basisregels voor regelmatige -ir (Module 5: finir, choisir, réfléchir, réussir, etc.)
+        if (baseInf.endsWith("ir") && !["partir", "servir", "sortir", "dormir", "sentir", "mentir", "venir", "revenir", "devenir"].includes(baseInf)) {
+            let stem = baseInf.slice(0, -2);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return "je " + stem + "is";
+            if (tenseInfo === "Indicatif présent (nous)") return stem + "issons";
+            if (tenseInfo === "Indicatif présent (ils)") return stem + "issent";
+            if (tenseInfo === "Passé composé (j')") return "ai " + stem + "i";
+            if (tenseInfo === "Passé récent (je)") return "viens de " + baseInf;
+            if (tenseInfo === "Futur proche (je)") return "vais " + baseInf;
+            if (tenseInfo === "Impératif (tu-vorm)") return stem + "is";
+            if (tenseInfo === "Impératif (vous-vorm)") return stem + "issez";
+        }
+
+        // Basisregels voor regelmatige -re werkwoorden (Module 2: répondre, vendre, perdre, attendre)
+        if (baseInf.endsWith("re") && ["répondre", "vendre", "perdre", "attendre", "descendre", "rendre"].includes(baseInf)) {
+            let stem = baseInf.slice(0, -2);
+            let isVowel = /^[aeiouéh]/.test(baseInf);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return "je " + stem + "s";
+            if (tenseInfo === "Indicatif présent (nous)") return stem + "ons";
+            if (tenseInfo === "Indicatif présent (ils)") return stem + "ent";
+            if (tenseInfo === "Passé composé (j')") return "ai " + stem + "u";
+            if (tenseInfo === "Passé récent (je)") return isVowel ? "viens d'" + baseInf : "viens de " + baseInf;
+            if (tenseInfo === "Futur proche (je)") return "vais " + baseInf;
+            if (tenseInfo === "Impératif (tu-vorm)") return stem + "s";
+            if (tenseInfo === "Impératif (vous-vorm)") return stem + "ez";
+        }
+
+        // Module 6 onregelmatige kortere -ir werkwoorden (partir, dormir, sortir, etc.)
+        if (["partir", "sortir", "dormir", "servir", "sentir", "mentir"].includes(baseInf)) {
+            let shortStem = baseInf.slice(0, -3); // par, sor, dor
+            let longStem = baseInf.slice(0, -2);  // part, sort, dorm
+            
+            if (tenseInfo === "Indicatif présent (je)") return "je " + shortStem + "s";
+            if (tenseInfo === "Indicatif présent (nous)") return longStem + "ons";
+            if (tenseInfo === "Indicatif présent (ils)") return longStem + "ent";
+            if (tenseInfo === "Passé composé (je)") return baseInf === "partir" || baseInf === "sortir" ? "suis " + longStem + "i" : "je suis " + longStem + "i";
+            if (tenseInfo === "Passé composé (j')") return "ai " + longStem + "i";
+            if (tenseInfo === "Passé récent (je)") return "viens de " + baseInf;
+            if (tenseInfo === "Futur proche (je)") return "vais " + baseInf;
+            if (tenseInfo === "Impératif (tu-vorm)") return shortStem + "s";
+            if (tenseInfo === "Impératif (vous-vorm)") return longStem + "ez";
+        }
+
+        return null; 
+    }
+
     let activePool = [];
     let currentQuizList = [];
     let currentWordIndex = 0;
@@ -414,6 +609,8 @@
 
     function startQuiz() {
         const checkboxes = document.querySelectorAll('.mod-checkbox');
+        const includeConjugations = document.getElementById('conjugation-checkbox').checked;
+        
         activePool = [];
         selectedModules = [];
 
@@ -422,7 +619,7 @@
                 const modId = parseInt(cb.value);
                 selectedModules.push(modId);
                 verbDatabase[modId].forEach(item => {
-                    activePool.push({ ...item, mod: modId });
+                    activePool.push({ ...item, mod: modId, quizType: "vertaling" });
                 });
             }
         });
@@ -432,7 +629,41 @@
             return;
         }
 
-        currentQuizList = [...activePool].sort(() => Math.random() - 0.5);
+        currentQuizList = [];
+        
+        // Voeg de normale vertalingen toe
+        activePool.forEach(item => {
+            currentQuizList.push({ ...item });
+        });
+
+        // Indien checkbox aan, voeg willekeurige werkwoordsvervoegingen toe
+        if (includeConjugations) {
+            const tenses = [
+                "Indicatif présent (je)", "Indicatif présent (nous)", "Indicatif présent (ils)", 
+                "Passé composé (j')", "Passé récent (je)", "Impératif (tu-vorm)", "Impératif (vous-vorm)", "Futur proche (je)"
+            ];
+
+            activePool.forEach(item => {
+                // Kies willekeurig 1 vorm per geselecteerd werkwoord om de quiz leuk/uitdagend te houden
+                const chosenTense = tenses[Math.floor(Math.random() * tenses.length)];
+                let expectedConjugation = getFrenchConjugation(item.fr, chosenTense);
+                
+                if (expectedConjugation) {
+                    // Haal eventuele voorloop-pronomina eraf voor het antwoordveld
+                    let cleanAnswer = expectedConjugation.replace(/^(je |j'|j’)/i, "").trim();
+                    
+                    currentQuizList.push({
+                        nl: `Vervoeging van: <strong>${item.fr}</strong> (${item.nl})`,
+                        fr: cleanAnswer,
+                        mod: item.mod,
+                        quizType: "vervoeging",
+                        tense: chosenTense
+                    });
+                }
+            });
+        }
+
+        currentQuizList.sort(() => Math.random() - 0.5);
         currentWordIndex = 0;
         scoreCorrect = 0;
         scoreTotal = 0;
@@ -454,8 +685,20 @@
         }
 
         const currentWord = currentQuizList[currentWordIndex];
-        document.getElementById('dutch-word').innerText = currentWord.nl;
+        document.getElementById('dutch-word').innerHTML = currentWord.nl;
         document.getElementById('mod-badge').innerText = `(Mod ${currentWord.mod})`;
+        
+        const tenseBadge = document.getElementById('tense-badge');
+        const subtitle = document.getElementById('quiz-subtitle');
+
+        if (currentWord.quizType === "vervoeging") {
+            tenseBadge.innerText = currentWord.tense;
+            tenseBadge.classList.remove('hidden');
+            subtitle.innerText = "Vul de juiste werkwoordsvorm in en druk op Enter.";
+        } else {
+            tenseBadge.classList.add('hidden');
+            subtitle.innerText = "Vul de juiste vertaling in en druk op Enter.";
+        }
         
         const inputField = document.getElementById('french-input');
         inputField.value = "";
@@ -508,11 +751,12 @@
             });
 
             wrongAnswers.push({
-                nl: currentWord.nl,
+                nl: currentWord.nl.replace(/<[^>]*>/g, ''), // Strip eventuele HTML-tags voor een schone lijst
                 correct: currentWord.fr,
                 user: userInput || "(leeg)",
                 mod: currentWord.mod,
-                isTypo: isTypo
+                isTypo: isTypo,
+                context: currentWord.quizType === "vervoeging" ? ` (${currentWord.tense})` : ""
             });
             
             fbContainer.className = "feedback-inline feedback-wrong";
@@ -550,47 +794,30 @@
         const isSingleModule = selectedModules.length === 1;
         const activeModulesStr = selectedModules.map(m => `Module ${m}`).join(', ');
         const targetContextStr = isSingleModule ? `<strong>Module ${selectedModules[0]}</strong>` : `deze combinatie van modules (${activeModulesStr})`;
-        const targetScopeWord = isSingleModule ? `deze module` : `deze modules`;
 
         const wrongVerbsCount = wrongAnswers.length;
         const typoCount = wrongAnswers.filter(w => w.isTypo).length;
         const realErrorsCount = wrongVerbsCount - typoCount;
 
         let dynamicSummary = `<p style="margin-top: 0; line-height: 1.5;"><strong>Geselecteerde modules:</strong> ${activeModulesStr}<br>` +
-                             `<strong>Resultaat:</strong> ${scoreCorrect} juist en ${wrongVerbsCount} fout van de ${scoreTotal} geteste woorden.<br>` +
-                             `<em>(Waarvan ${typoCount} kleine letterfout(en) en ${realErrorsCount} echt verkeerd ingevulde woorden)</em></p>`;
+                             `<strong>Resultaat:</strong> ${scoreCorrect} juist en ${wrongVerbsCount} fout van de ${scoreTotal} geteste onderdelen.<br>` +
+                             `<em>(Waarvan ${typoCount} kleine letterfout(en) en ${realErrorsCount} echte vormfouten)</em></p>`;
 
-        // Perfect contextualized feedback addressing exactly how many modules were selected
         if (scoreTotal === 0) {
             adviceTitle.innerText = "Geen gegevens beschikbaar 🔎";
-            adviceText.innerHTML = dynamicSummary + "Je hebt nog geen woorden beantwoord. Kies een module en start de test om een gerichte analyse te ontvangen.";
+            adviceText.innerHTML = dynamicSummary + "Je hebt nog geen vragen beantwoord.";
         } else if (percent === 100) {
             adviceTitle.innerText = "Uitzonderlijke prestatie! 🏆";
-            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst ${targetContextStr} volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules toe te voegen of probeer de woorden sneller achter elkaar te vertalen.`;
-        } else if (wrongVerbsCount === 1 && typoCount === 1) {
-            adviceTitle.innerText = "Zó dichtbij! Slechts één letterfoutje 😭✨";
-            adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen van ${targetContextStr} perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een topcijfer haalt met een heel klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
-        } else if (wrongVerbsCount === 1) {
-            adviceTitle.innerText = "Bijna perfect! Slechts 1 woord gemist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos binnen ${targetContextStr}. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, en haal direct die felbegeerde 100% in je volgende ronde!`;
-        } else if (percent >= 80 && realErrorsCount === 0) {
-            adviceTitle.innerText = "Franse betekenissen top, let op spelling! ✍️";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis binnen ${targetContextStr} helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
+            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst zowel de vertalingen als de werkwoordstijden van ${targetContextStr} volledig.`;
         } else if (percent >= 80) {
             adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit de basis voor ${targetContextStr} er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes (${wrongVerbsCount} fouten in totaal). Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% voor ${targetContextStr} zit de parate kennis er heel goed in. Schrijf de gemiste vormen even op een blad papier om de puntjes op de i te zetten!`;
         } else if (percent >= 50) {
-            adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%) voor ${targetContextStr}, een prima start! Je had ${scoreCorrect} werkwoorden juist en ${wrongVerbsCount} fouten. Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Blader nog eens rustig door de lijst.`;
+            adviceTitle.innerText = "Voldoende basis, focus op tijden vereist 🎯";
+            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%). Werkwoordstijden kunnen pittig zijn! Neem de fouten hieronder rustig door en let goed op de juiste stammen en uitgangen.`;
         } else {
-            // High error count context
-            if (isSingleModule) {
-                adviceTitle.innerText = "Focus op deze module vereist 💡";
-                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat de woordenschat van ${targetContextStr} op dit moment nog iets te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: neem de lijst van deze specifieke module rustig door. <strong>Probeer je fouten een aantal keer op een blad papier te schrijven.</strong> Herhaling in kleine stapjes werkt het allerbest!`;
-            } else {
-                adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
-                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende module toe. Rustig herhalen werkt het best!`;
-            }
+            adviceTitle.innerText = "Tijd voor extra herhaling 💡";
+            adviceText.innerHTML = dynamicSummary + `De Franse tijden en vertalingen zijn momenteek nog wat te lastig (${percent}%). Tip: Oefen eerst eens een ronde met de vervoegingen uitgeschakeld om de basiswoorden vlekkeloos te leren kennen!`;
         }
 
         const errorListDiv = document.getElementById('error-list');
@@ -607,7 +834,7 @@
                 const typoLabel = item.isTypo ? " <b style='color:#b45309; background:#fef3c7; padding:2px 6px; border-radius:4px; font-size:11px;'>1 letter fout!</b>" : "";
                 itemDiv.innerHTML = `
                     <span class="mod">[Mod ${item.mod}]</span> 
-                    <span class="dutch">${item.nl}</span>${typoLabel}<br>
+                    <span class="dutch">${item.nl}</span>${item.context}${typoLabel}<br>
                     Jouw antwoord: <span class="wrong">${item.user}</span> ➡️ Juist: <span class="correct">${item.correct}</span>
                 `;
                 errorListDiv.appendChild(itemDiv);
