@@ -392,7 +392,7 @@
         ],
         4: [
             { nl: "aankondigen", fr: "annoncer" }, { nl: "beklagen", fr: "plaindre" }, { nl: "bereiken", fr: "atteindre" },
-            { nl: "beschermen", fr: "protéger" }, { nl: "betekenen", fr: "signifier" }, { nl: "creëren", fr: "creer" },
+            { nl: "beschermen", fr: "protéger" }, { nl: "betekenen", fr: "signifier" }, { nl: "creëren", fr: "créer" },
             { nl: "delen", fr: "partager" }, { nl: "doven", fr: "éteindre" }, { nl: "fotograferen", fr: "photographier" },
             { nl: "herdoen", fr: "refaire" }, { nl: "herhalen", fr: "répéter" }, { nl: "hopen", fr: "espérer" },
             { nl: "horen", fr: "entendre" }, { nl: "kopen", fr: "acheter" }, { nl: "lijken op", fr: "ressembler" },
@@ -418,11 +418,46 @@
     };
 
     const hardcodedConjugations = {
-        "faire": { "Indicatif présent (je)": "fais", "Indicatif présent (nous)": "faisons", "Indicatif présent (ils)": "font", "Passé composé (j')": "ai fait", "Passé récent (je)": "viens de faire", "Futur proche (je)": "vais faire", "Impératif (tu)": "fais", "Impératif (vous)": "faites" },
+        "faire": { "Indicatif présent (je)": "fais", "Indicatif présent (nous)": "faisons", "Indicatif présent (ils)": "font", "Passé composé (j')": "ai fait", "Passé composé (je)": "ai fait", "Passé récent (je)": "viens de faire", "Futur proche (je)": "vais faire", "Impératif (tu)": "fais", "Impératif (vous)": "faites" },
+        "refaire": { "Indicatif présent (je)": "refais", "Indicatif présent (nous)": "refaisons", "Indicatif présent (ils)": "refont", "Passé composé (j')": "ai refait", "Passé composé (je)": "ai refait", "Passé récent (je)": "viens de refaire", "Futur proche (je)": "vais refaire", "Impératif (tu)": "refais", "Impératif (vous)": "refaites" },
         "aller": { "Indicatif présent (je)": "vais", "Indicatif présent (nous)": "allons", "Indicatif présent (ils)": "vont", "Passé composé (je)": "suis allé", "Passé récent (je)": "viens d'aller", "Futur proche (je)": "vais aller", "Impératif (tu)": "va", "Impératif (vous)": "allez" },
-        "avoir": { "Indicatif présent (j')": "ai", "Indicatif présent (nous)": "avons", "Indicatif présent (ils)": "ont", "Passé composé (j')": "ai eu", "Passé récent (je)": "viens d'avoir", "Futur proche (je)": "vais avoir", "Impératif (tu)": "aie", "Impératif (vous)": "ayez" },
-        "être": { "Indicatif présent (je)": "suis", "Indicatif présent (nous)": "sommes", "Indicatif présent (ils)": "sont", "Passé composé (j')": "ai été", "Passé récent (je)": "viens d'être", "Futur proche (je)": "vais être", "Impératif (tu)": "sois", "Impératif (vous)": "soyez" },
-        "prendre": { "Indicatif présent (je)": "prends", "Indicatif présent (nous)": "prenons", "Indicatif présent (ils)": "prennent", "Passé composé (j')": "ai pris", "Passé récent (je)": "viens de prendre", "Futur proche (je)": "vais prendre", "Impératif (tu)": "prends", "Impératif (vous)": "prenez" }
+        "avoir": { "Indicatif présent (j')": "ai", "Indicatif présent (je)": "ai", "Indicatif présent (nous)": "avons", "Indicatif présent (ils)": "ont", "Passé composé (j')": "ai eu", "Passé composé (je)": "ai eu", "Passé récent (je)": "viens d'avoir", "Futur proche (je)": "vais avoir", "Impératif (tu)": "aie", "Impératif (vous)": "ayez" },
+        "être": { "Indicatif présent (je)": "suis", "Indicatif présent (nous)": "sommes", "Indicatif présent (ils)": "sont", "Passé composé (j')": "ai été", "Passé composé (je)": "ai été", "Passé récent (je)": "viens d'être", "Futur proche (je)": "vais être", "Impératif (tu)": "sois", "Impératif (vous)": "soyez" },
+        "prendre": { "Indicatif présent (je)": "prends", "Indicatif présent (nous)": "prenons", "Indicatif présent (ils)": "prennent", "Passé composé (j')": "ai pris", "Passé composé (je)": "ai pris", "Passé récent (je)": "viens de prendre", "Futur proche (je)": "vais prendre", "Impératif (tu)": "prends", "Impératif (vous)": "prenez" },
+        "apprendre": { "Indicatif présent (je)": "apprends", "Indicatif présent (nous)": "apprenons", "Indicatif présent (ils)": "apprennent", "Passé composé (j')": "ai appris", "Passé composé (je)": "ai appris", "Passé récent (je)": "viens d'apprendre", "Futur proche (je)": "vais apprendre", "Impératif (tu)": "apprends", "Impératif (vous)": "apprenez" },
+        "comprendre": { "Indicatif présent (je)": "comprends", "Indicatif présent (nous)": "comprenons", "Indicatif présent (ils)": "comprennent", "Passé composé (j')": "ai compris", "Passé composé (je)": "ai compris", "Passé récent (je)": "viens de comprendre", "Futur proche (je)": "vais comprendre", "Impératif (tu)": "comprends", "Impératif (vous)": "comprenez" },
+        "venir": { "Indicatif présent (je)": "viens", "Indicatif présent (nous)": "venons", "Indicatif présent (ils)": "viennent", "Passé composé (je)": "suis venu", "Passé récent (je)": "viens de venir", "Futur proche (je)": "vais venir", "Impératif (tu)": "viens", "Impératif (vous)": "venez" },
+        "revenir": { "Indicatif présent (je)": "reviens", "Indicatif présent (nous)": "revenons", "Indicatif présent (ils)": "reviennent", "Passé composé (je)": "suis revenu", "Passé récent (je)": "viens de revenir", "Futur proche (je)": "vais revenir", "Impératif (tu)": "reviens", "Impératif (vous)": "revenez" },
+        "devenir": { "Indicatif présent (je)": "deviens", "Indicatif présent (nous)": "devenons", "Indicatif présent (ils)": "deviennent", "Passé composé (je)": "suis devenu", "Passé récent (je)": "viens de devenir", "Futur proche (je)": "vais devenir", "Impératif (tu)": "deviens", "Impératif (vous)": "devenez" },
+        "tenir": { "Indicatif présent (je)": "tiens", "Indicatif présent (nous)": "tenons", "Indicatif présent (ils)": "tiennent", "Passé composé (j')": "ai tenu", "Passé composé (je)": "ai tenu", "Passé récent (je)": "viens de tenir", "Futur proche (je)": "vais tenir", "Impératif (tu)": "tiens", "Impératif (vous)": "tenez" },
+        "retenir": { "Indicatif présent (je)": "retiens", "Indicatif présent (nous)": "retenons", "Indicatif présent (ils)": "retiennent", "Passé composé (j')": "ai retenu", "Passé composé (je)": "ai retenu", "Passé récent (je)": "viens de retenir", "Futur proche (je)": "vais retenir", "Impératif (tu)": "retiens", "Impératif (vous)": "retenez" },
+        "pouvoir": { "Indicatif présent (je)": "peux", "Indicatif présent (nous)": "pouvons", "Indicatif présent (ils)": "peuvent", "Passé composé (j')": "ai pu", "Passé composé (je)": "ai pu", "Passé récent (je)": "viens de pouvoir", "Futur proche (je)": "vais pouvoir", "Impératif (tu)": "peux", "Impératif (vous)": "pouvez" },
+        "vouloir": { "Indicatif présent (je)": "veux", "Indicatif présent (nous)": "voulons", "Indicatif présent (ils)": "veulent", "Passé composé (j')": "ai voulu", "Passé composé (je)": "ai voulu", "Passé récent (je)": "viens de vouloir", "Futur proche (je)": "vais vouloir", "Impératif (tu)": "veuille", "Impératif (vous)": "veuillez" },
+        "devoir": { "Indicatif présent (je)": "dois", "Indicatif présent (nous)": "devons", "Indicatif présent (ils)": "doivent", "Passé composé (j')": "ai dû", "Passé composé (je)": "ai dû", "Passé récent (je)": "viens de devoir", "Futur proche (je)": "vais devoir", "Impératif (tu)": "dois", "Impératif (vous)": "devez" },
+        "savoir": { "Indicatif présent (je)": "sais", "Indicatif présent (nous)": "savons", "Indicatif présent (ils)": "savent", "Passé composé (j')": "ai su", "Passé composé (je)": "ai su", "Passé récent (je)": "viens de savoir", "Futur proche (je)": "vais savoir", "Impératif (tu)": "sache", "Impératif (vous)": "sachez" },
+        "voir": { "Indicatif présent (je)": "vois", "Indicatif présent (nous)": "voyons", "Indicatif présent (ils)": "voient", "Passé composé (j')": "ai vu", "Passé composé (je)": "ai vu", "Passé récent (je)": "viens de voir", "Futur proche (je)": "vais voir", "Impératif (tu)": "vois", "Impératif (vous)": "voyez" },
+        "recevoir": { "Indicatif présent (je)": "reçois", "Indicatif présent (nous)": "recevons", "Indicatif présent (ils)": "reçoivent", "Passé composé (j')": "ai reçu", "Passé composé (je)": "ai reçu", "Passé récent (je)": "viens de recevoir", "Futur proche (je)": "vais recevoir", "Impératif (tu)": "reçois", "Impératif (vous)": "recevez" },
+        "mettre": { "Indicatif présent (je)": "mets", "Indicatif présent (nous)": "mettons", "Indicatif présent (ils)": "mettent", "Passé composé (j')": "ai mis", "Passé composé (je)": "ai mis", "Passé récent (je)": "viens de mettre", "Futur proche (je)": "vais mettre", "Impératif (tu)": "mets", "Impératif (vous)": "mettez" },
+        "promettre": { "Indicatif présent (je)": "promets", "Indicatif présent (nous)": "promettons", "Indicatif présent (ils)": "promettent", "Passé composé (j')": "ai promis", "Passé composé (je)": "ai promis", "Passé récent (je)": "viens de promettre", "Futur proche (je)": "vais promettre", "Impératif (tu)": "promets", "Impératif (vous)": "promettez" },
+        "permettre": { "Indicatif présent (je)": "permets", "Indicatif présent (nous)": "permettons", "Indicatif présent (ils)": "permettent", "Passé composé (j')": "ai permis", "Passé composé (je)": "ai permis", "Passé récent (je)": "viens de permettre", "Futur proche (je)": "vais permettre", "Impératif (tu)": "permets", "Impératif (vous)": "permettez" },
+        "écrire": { "Indicatif présent (j')": "écris", "Indicatif présent (je)": "écris", "Indicatif présent (nous)": "écrivons", "Indicatif présent (ils)": "écrivent", "Passé composé (j')": "ai écrit", "Passé composé (je)": "ai écrit", "Passé récent (je)": "viens d'écrire", "Futur proche (je)": "vais écrire", "Impératif (tu)": "écris", "Impératif (vous)": "écrivez" },
+        "décrire": { "Indicatif présent (je)": "décris", "Indicatif présent (nous)": "décrivons", "Indicatif présent (ils)": "décrivent", "Passé composé (j')": "ai décrit", "Passé composé (je)": "ai décrit", "Passé récent (je)": "viens de décrire", "Futur proche (je)": "vais décrire", "Impératif (tu)": "décris", "Impératif (vous)": "décrivez" },
+        "lire": { "Indicatif présent (je)": "lis", "Indicatif présent (nous)": "lisons", "Indicatif présent (ils)": "lisent", "Passé composé (j')": "ai lu", "Passé composé (je)": "ai lu", "Passé récent (je)": "viens de lire", "Futur proche (je)": "vais lire", "Impératif (tu)": "lis", "Impératif (vous)": "lisez" },
+        "dire": { "Indicatif présent (je)": "dis", "Indicatif présent (nous)": "disons", "Indicatif présent (ils)": "disent", "Passé composé (j')": "ai dit", "Passé composé (je)": "ai dit", "Passé récent (je)": "viens de dire", "Futur proche (je)": "vais dire", "Impératif (tu)": "dis", "Impératif (vous)": "dites" },
+        "battre": { "Indicatif présent (je)": "bats", "Indicatif présent (nous)": "battons", "Indicatif présent (ils)": "battent", "Passé composé (j')": "ai battu", "Passé composé (je)": "ai battu", "Passé récent (je)": "viens de battre", "Futur proche (je)": "vais battre", "Impératif (tu)": "bats", "Impératif (vous)": "battez" },
+        "ouvrir": { "Indicatif présent (j')": "ouvre", "Indicatif présent (je)": "ouvre", "Indicatif présent (nous)": "ouvrons", "Indicatif présent (ils)": "ouvrent", "Passé composé (j')": "ai ouvert", "Passé composé (je)": "ai ouvert", "Passé récent (je)": "viens d'ouvrir", "Futur proche (je)": "vais ouvrir", "Impératif (tu)": "ouvre", "Impératif (vous)": "ouvrez" },
+        "couvrir": { "Indicatif présent (je)": "couvre", "Indicatif présent (nous)": "couvrons", "Indicatif présent (ils)": "couvrent", "Passé composé (j')": "ai couvert", "Passé composé (je)": "ai couvert", "Passé récent (je)": "viens de couvrir", "Futur proche (je)": "vais couvrir", "Impératif (tu)": "couvre", "Impératif (vous)": "couvrez" },
+        "découvrir": { "Indicatif présent (je)": "découvre", "Indicatif présent (nous)": "découvrons", "Indicatif présent (ils)": "découvrent", "Passé composé (j')": "ai découvert", "Passé composé (je)": "ai découvert", "Passé récent (je)": "viens de découvrir", "Futur proche (je)": "vais découvrir", "Impératif (tu)": "découvre", "Impératif (vous)": "découvrez" },
+        "offrir": { "Indicatif présent (j')": "offre", "Indicatif présent (je)": "offre", "Indicatif présent (nous)": "offrons", "Indicatif présent (ils)": "offrent", "Passé composé (j')": "ai offert", "Passé composé (je)": "ai offert", "Passé récent (je)": "viens d'offrir", "Futur proche (je)": "vais offrir", "Impératif (tu)": "offre", "Impératif (vous)": "offrez" },
+        "souffrir": { "Indicatif présent (je)": "souffre", "Indicatif présent (nous)": "souffrons", "Indicatif présent (ils)": "souffrent", "Passé composé (j')": "ai souffert", "Passé composé (je)": "ai souffert", "Passé récent (je)": "viens de souffrir", "Futur proche (je)": "vais souffrir", "Impératif (tu)": "souffre", "Impératif (vous)": "souffrez" },
+        "accueillir": { "Indicatif présent (j')": "accueille", "Indicatif présent (je)": "accueille", "Indicatif présent (nous)": "accueillons", "Indicatif présent (ils)": "accueillent", "Passé composé (j')": "ai accueilli", "Passé composé (je)": "ai accueilli", "Passé récent (je)": "viens d'accueillir", "Futur proche (je)": "vais accueillir", "Impératif (tu)": "accueille", "Impératif (vous)": "accueillez" },
+        "cueillir": { "Indicatif présent (je)": "cueille", "Indicatif présent (nous)": "cueillons", "Indicatif présent (ils)": "cueillent", "Passé composé (j')": "ai cueilli", "Passé composé (je)": "ai cueilli", "Passé récent (je)": "viens de cueillir", "Futur proche (je)": "vais cueillir", "Impératif (tu)": "cueille", "Impératif (vous)": "cueillez" },
+        "éteindre": { "Indicatif présent (j')": "éteins", "Indicatif présent (je)": "éteins", "Indicatif présent (nous)": "éteignons", "Indicatif présent (ils)": "éteignent", "Passé composé (j')": "ai éteint", "Passé composé (je)": "ai éteint", "Passé récent (je)": "viens d'éteindre", "Futur proche (je)": "vais éteindre", "Impératif (tu)": "éteins", "Impératif (vous)": "éteignez" },
+        "peindre": { "Indicatif présent (je)": "peins", "Indicatif présent (nous)": "peignons", "Indicatif présent (ils)": "peignent", "Passé composé (j')": "ai peint", "Passé composé (je)": "ai peint", "Passé récent (je)": "viens de peindre", "Futur proche (je)": "vais peindre", "Impératif (tu)": "peins", "Impératif (vous)": "peignez" },
+        "craindre": { "Indicatif présent (je)": "crains", "Indicatif présent (nous)": "craignons", "Indicatif présent (ils)": "craignent", "Passé composé (j')": "ai craint", "Passé composé (je)": "ai craint", "Passé récent (je)": "viens de craindre", "Futur proche (je)": "vais craindre", "Impératif (tu)": "crains", "Impératif (vous)": "craignez" },
+        "atteindre": { "Indicatif présent (j')": "atteins", "Indicatif présent (je)": "atteins", "Indicatif présent (nous)": "atteignons", "Indicatif présent (ils)": "atteignent", "Passé composé (j')": "ai atteint", "Passé composé (je)": "ai atteint", "Passé récent (je)": "viens d'atteindre", "Futur proche (je)": "vais atteindre", "Impératif (tu)": "atteins", "Impératif (vous)": "atteignez" },
+        "joindre": { "Indicatif présent (je)": "joins", "Indicatif présent (nous)": "joignons", "Indicatif présent (ils)": "joignent", "Passé composé (j')": "ai joint", "Passé composé (je)": "ai joint", "Passé récent (je)": "viens de joindre", "Futur proche (je)": "vais joindre", "Impératif (tu)": "joins", "Impératif (vous)": "joignez" },
+        "plaindre": { "Indicatif présent (je)": "plains", "Indicatif présent (nous)": "plaignons", "Indicatif présent (ils)": "plaignent", "Passé composé (j')": "ai plaint", "Passé composé (je)": "ai plaint", "Passé récent (je)": "viens de plaindre", "Futur proche (je)": "vais plaindre", "Impératif (tu)": "plains", "Impératif (vous)": "plaignez" }
     };
 
     const pronounTranslations = {
@@ -435,31 +470,101 @@
     };
 
     function getFrenchConjugation(inf, tenseInfo) {
-        let baseInf = inf.split(' ')[0].trim().toLowerCase();
-        if (hardcodedConjugations[baseInf] && hardcodedConjugations[baseInf][tenseInfo]) {
-            return hardcodedConjugations[baseInf][tenseInfo];
+        let cleanInf = inf.split('/')[0].split(' ')[0].trim().toLowerCase();
+        let isVowel = /^[aeiouéèêh]/.test(cleanInf);
+
+        if (hardcodedConjugations[cleanInf] && hardcodedConjugations[cleanInf][tenseInfo]) {
+            return hardcodedConjugations[cleanInf][tenseInfo];
         }
-        if (baseInf.endsWith("er")) {
-            let stem = baseInf.slice(0, -2);
-            let isVowel = /^[aeiouéh]/.test(baseInf);
-            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return stem + "e";
+
+        const etreVerbs = ["arriver", "entrer", "rester", "rentrer", "venir", "revenir", "devenir", "descendre", "partir", "sortir"];
+
+        if (tenseInfo === "Passé récent (je)") return isVowel ? "viens d'" + cleanInf : "viens de " + cleanInf;
+        if (tenseInfo === "Futur proche (je)") return "vais " + cleanInf;
+
+        if (cleanInf.endsWith("er")) {
+            let stem = cleanInf.slice(0, -2);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") {
+                if (cleanInf === "acheter") return "achète";
+                if (cleanInf === "préférer") return "préfère";
+                if (cleanInf === "répéter") return "répète";
+                if (cleanInf === "espérer") return "espère";
+                if (cleanInf === "compléter") return "complète";
+                if (cleanInf === "suggérer") return "suggère";
+                if (cleanInf === "protéger") return "protège";
+                if (cleanInf === "jeter") return "jette";
+                if (cleanInf === "appeler") return "appelle";
+                if (cleanInf.endsWith("ayer")) return stem.slice(0,-1) + "aie";
+                return stem + "e";
+            }
             if (tenseInfo === "Indicatif présent (nous)") {
-                if (baseInf.endsWith("ger")) return stem + "eons";
-                if (baseInf.endsWith("cer")) return stem.slice(0, -1) + "çons";
+                if (cleanInf.endsWith("ger")) return stem + "eons";
+                if (cleanInf.endsWith("cer")) return stem.slice(0, -1) + "çons";
                 return stem + "ons";
             }
-            if (tenseInfo === "Indicatif présent (ils)") return stem + "ent";
-            if (tenseInfo === "Passé composé (j')") return "ai " + stem + "é";
-            if (tenseInfo === "Passé composé (je)") {
-                let etreVerbs = ["arriver", "entrer", "rester", "rentrer", "venir", "revenir", "devenir", "descendre", "partir", "sortir"];
-                if(etreVerbs.includes(baseInf)) return "suis " + stem + "é";
-                return "ai " + stem + "é"; 
+            if (tenseInfo === "Indicatif présent (ils)") {
+                if (cleanInf === "acheter") return "achètent";
+                if (cleanInf === "préférer") return "préfèrent";
+                if (cleanInf === "répéter") return "répètent";
+                if (cleanInf === "espérer") return "espèrent";
+                if (cleanInf === "compléter") return "complètent";
+                if (cleanInf === "suggérer") return "suggèrent";
+                if (cleanInf === "protéger") return "protègent";
+                if (cleanInf === "jeter") return "jettent";
+                if (cleanInf.endsWith("ayer")) return stem.slice(0,-1) + "aient";
+                return stem + "ent";
             }
-            if (tenseInfo === "Passé récent (je)") return isVowel ? "viens d'" + baseInf : "viens de " + baseInf;
-            if (tenseInfo === "Futur proche (je)") return "vais " + baseInf;
-            if (tenseInfo === "Impératif (tu)") return stem + "e";
+            if (tenseInfo.startsWith("Passé composé")) {
+                let pp = stem + "é";
+                return etreVerbs.includes(cleanInf) ? "suis " + pp : "ai " + pp;
+            }
+            if (tenseInfo === "Impératif (tu)") {
+                if (cleanInf === "acheter") return "achète";
+                if (cleanInf === "préférer") return "préfère";
+                return stem + "e";
+            }
+            if (tenseInfo === "Impératif (vous)") {
+                if (cleanInf.endsWith("cer")) return stem.slice(0, -1) + "cez";
+                return stem + "ez";
+            }
+        }
+
+        if (cleanInf.endsWith("ir") && !["partir", "sortir", "dormir", "servir", "sentir", "mentir"].includes(cleanInf)) {
+            let stem = cleanInf.slice(0, -2);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return stem + "is";
+            if (tenseInfo === "Indicatif présent (nous)") return stem + "issons";
+            if (tenseInfo === "Indicatif présent (ils)") return stem + "issent";
+            if (tenseInfo.startsWith("Passé composé")) return "ai " + stem + "i";
+            if (tenseInfo === "Impératif (tu)") return stem + "is";
+            if (tenseInfo === "Impératif (vous)") return stem + "issez";
+        }
+
+        if (["partir", "sortir", "dormir", "servir", "sentir", "mentir"].includes(cleanInf)) {
+            let stem = cleanInf.slice(0, -3);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return stem + "s";
+            if (tenseInfo === "Indicatif présent (nous)") return stem + cleanInf.slice(-3, -2) + "ons";
+            if (tenseInfo === "Indicatif présent (ils)") return stem + cleanInf.slice(-3, -2) + "ent";
+            if (tenseInfo.startsWith("Passé composé")) {
+                let pp = stem + cleanInf.slice(-3, -2) + "i";
+                return etreVerbs.includes(cleanInf) ? "suis " + pp : "ai " + pp;
+            }
+            if (tenseInfo === "Impératif (tu)") return stem + "s";
+            if (tenseInfo === "Impératif (vous)") return stem + cleanInf.slice(-3, -2) + "ez";
+        }
+
+        if (cleanInf.endsWith("re")) {
+            let stem = cleanInf.slice(0, -2);
+            if (tenseInfo === "Indicatif présent (je)" || tenseInfo === "Indicatif présent (j')") return stem + "s";
+            if (tenseInfo === "Indicatif présent (nous)") return stem + "ons";
+            if (tenseInfo === "Indicatif présent (ils)") return stem + "ent";
+            if (tenseInfo.startsWith("Passé composé")) {
+                let pp = stem + "u";
+                return etreVerbs.includes(cleanInf) ? "suis " + pp : "ai " + pp;
+            }
+            if (tenseInfo === "Impératif (tu)") return stem + "s";
             if (tenseInfo === "Impératif (vous)") return stem + "ez";
         }
+
         return null; 
     }
 
@@ -534,7 +639,7 @@
                         let fullPronounText = pronounTranslations[pronounLabel] || pronounLabel;
 
                         currentQuizList.push({
-                            nl: `Verveeg het werkwoord: <strong style="color:#2563eb;">${item.nl}</strong>`,
+                            nl: `Vervoeg het werkwoord: <strong style="color:#2563eb;">${item.nl}</strong>`,
                             fr: cleanAnswer,
                             mod: item.mod,
                             quizType: "vervoeging",
@@ -609,6 +714,12 @@
             checkAnswerInline();
         }
     }
+
+    document.getElementById('french-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleInputSubmission();
+        }
+    });
 
     function checkAnswerInline() {
         if (currentWordIndex >= currentQuizList.length) return;
@@ -688,50 +799,31 @@
             adviceText.innerHTML = dynamicSummary + "Je hebt nog geen woorden beantwoord. Kies een module en start de test om een gerichte analyse te ontvangen.";
         } else if (percent === 100) {
             adviceTitle.innerText = "Uitzonderlijke prestatie! 🏆";
-            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst ${targetContextStr} volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules of extra tijdsvervoegingen toe te voegen!`;
-        } else if (wrongVerbsCount === 1 && typoCount === 1) {
-            adviceTitle.innerText = "Zó dichtbij! Slechts één letterfoutje 😭✨";
-            adviceText.innerHTML = dynamicSummary + `Je kent alle Franse betekenissen van ${targetContextStr} perfect uit je hoofd! Er is letterlijk maar <strong>één enkel woord</strong> waar je een typefout of één letter verschil in had. Dat is alsof je een topcijfer haalt met een heel klein schoonheidsfoutje. <strong>Schrijf dit ene woord even op een blad papier</strong> en je zit gegarandeerd op de 100%!`;
-        } else if (wrongVerbsCount === 1) {
-            adviceTitle.innerText = "Bijna perfect! Slechts 1 woord gemist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Super gedaan! Je had op één na alles foutloos binnen ${targetContextStr}. Je kent de rest van de woordenschat uitstekend. Neem dit specifieke woord direct even door, <strong>schrijf het op een blad papier</strong>, and haal direct die felbegeerde 100% in je volgende ronde!`;
-        } else if (percent >= 80 && realErrorsCount === 0) {
-            adviceTitle.innerText = "Franse betekenissen top, let op spelling! ✍️";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit het met je parate kennis binnen ${targetContextStr} helemaal goed! Opvallend is dat <strong>al je fouten pure letterfoutjes of typefoutjes waren</strong>. Je kent de betekenissen dus wel! <strong>Probeer je fouten even op een blad papier te schrijven</strong> om de exacte spelling in je vingers te krijgen.`;
+            adviceText.innerHTML = dynamicSummary + `Perfecte score van 100%! Je beheerst ${targetContextStr} volledig. Je hebt een ijzersterk taalgevoel ontwikkeld. Tip: Breid je kennis uit door extra modules of extra tijden aan te vinken!`;
         } else if (percent >= 80) {
-            adviceTitle.innerText = "Geweldig op weg! 🚀";
-            adviceText.innerHTML = dynamicSummary + `Met een score van ${percent}% zit de basis voor ${targetContextStr} er erg goed in! Je maakt nog een paar kleine schoonheidsfoutjes (${wrongVerbsCount} fouten in totaal). Probeer je fouten te schrijven op een blad papier. Kijk goed naar de gemiste woorden hieronder: zit de fout in de spelling of kende je het woord of de grammaticale vorm niet? Neem ze eenmaal kort door en doe nog een ronde om voor de 100% te gaan!`;
+            adviceTitle.innerText = "Zeer goed resultaat! 👏";
+            adviceText.innerHTML = dynamicSummary + `Je hebt een prima beheersing van ${targetContextStr}. De meeste vormen en vertalingen zitten er goed in. Kijk hieronder even naar de kleine foutjes om je score naar 100% te tillen.`;
         } else if (percent >= 50) {
-            adviceTitle.innerText = "Voldoende basis, focus vereist 🎯";
-            adviceText.innerHTML = dynamicSummary + `Je hebt meer dan de helft goed (${percent}%) voor ${targetContextStr}, een prima start! Je had ${scoreCorrect} werkwoorden juist en ${wrongVerbsCount} fouten. Om de overige woorden écht goed te onthouden, raden we aan om de woorden die je fout had hardop te spellen. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Blader nog eens rustig door de lijst.`;
+            adviceTitle.innerText = "Voldoende, maar blijf oefenen! 📚";
+            adviceText.innerHTML = dynamicSummary + `Je bent op de goede weg met ${targetContextStr}, maar er sluipt nog wat onzekerheid in de uitgangen of stamvormen. Neem de foutenlijst hieronder aandachtig door.`;
         } else {
-            if (isSingleModule) {
-                adviceTitle.innerText = "Focus op deze module vereist 💡";
-                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat de woordenschat of vervoeging van ${targetContextStr} op dit moment nog iets te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: neem de lijst van deze specifieke module rustig door. <strong>Probeer je fouten een aantal keer op een blad papier te schrijven.</strong> Herhaling in kleine stapjes werkt het allerbest!`;
-            } else {
-                adviceTitle.innerText = "Tijd voor een nieuwe strategie 💡";
-                adviceText.innerHTML = dynamicSummary + `Het lijkt erop dat deze combinatie van modules op dit moment nog iets te groot of te lastig is. Je score is ${percent}% (${scoreCorrect} juist, ${wrongVerbsCount} fout). Geen zorgen, dat hoort bij het leerproces! Ons advies: zet bij de volgende ronde slechts één enkele module aan en zet de tijdsvervoegingen eventueel tijdelijk uit. <strong>Probeer je fouten te schrijven op een blad papier.</strong> Zodra je die module foutloos kent, voeg je pas stap voor stap de volgende onderdelen toe. Rustig herhalen werkt het best!`;
-            }
+            adviceTitle.innerText = "Herhaling aanbevolen ⚠️";
+            adviceText.innerHTML = dynamicSummary + `Het lukte nog niet helemaal bij ${targetContextStr}. Tip: Oefen eerst enkel de vertalingen, en voeg daarna stap voor stap tijden toe zoals Present of Futur proche.`;
         }
 
-        const errorListDiv = document.getElementById('error-list');
-        const errorContainer = document.getElementById('error-container');
-        errorListDiv.innerHTML = "";
+        const errorListContainer = document.getElementById('error-list');
+        errorListContainer.innerHTML = "";
 
         if (wrongAnswers.length === 0) {
-            errorContainer.style.display = "none";
+            errorListContainer.innerHTML = "<div style='color: #10b981; font-weight: 600;'>Geen fouten gemaakt! Geweldig werk! 🎉</div>";
         } else {
-            errorContainer.style.display = "block";
-            wrongAnswers.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "error-item";
-                const typoLabel = item.isTypo ? " <b style='color:#b45309; background:#fef3c7; padding:2px 6px; border-radius:4px; font-size:11px;'>1 letter fout!</b>" : "";
-                itemDiv.innerHTML = `
-                    <span class="mod">[Mod ${item.mod}]</span> 
-                    <span class="dutch">${item.nl}</span>${typoLabel}<br>
-                    Jouw antwoord: <span class="wrong">${item.user}</span> ➡️ Juist: <span class="correct">${item.correct}</span>
-                `;
-                errorListDiv.appendChild(itemDiv);
+            wrongAnswers.forEach(err => {
+                const item = document.createElement('div');
+                item.className = "error-item";
+                item.innerHTML = `<span class="mod">(Mod ${err.mod})</span> <span class="dutch">${err.nl}</span>: ` +
+                                 `<span class="wrong">${err.user}</span> ➔ <span class="correct">${err.correct}</span>` +
+                                 (err.isTypo ? " <small style='color: #ea580c;'>(Tikfout)</small>" : "");
+                errorListContainer.appendChild(item);
             });
         }
     }
@@ -740,13 +832,6 @@
         document.getElementById('end-screen').classList.add('hidden');
         document.getElementById('start-screen').classList.remove('hidden');
     }
-
-    document.addEventListener('keydown', function(e) {
-        const quizScreenActive = !document.getElementById('quiz-screen').classList.contains('hidden');
-        if (e.key === 'Enter' && quizScreenActive) {
-            handleInputSubmission();
-        }
-    });
 </script>
 </body>
 </html>
