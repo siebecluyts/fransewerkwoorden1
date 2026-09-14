@@ -135,11 +135,11 @@
 
         .footer a {
             color: #3b82f6;
-            text-decoration: none;
+            text-decoration: underline;
         }
 
         .footer a:hover {
-            text-decoration: underline;
+            color: #1d4ed8;
         }
 
         /* Practice Mode Styles */
@@ -170,6 +170,30 @@
             font-size: 16px;
             outline: none;
             margin-bottom: 16px;
+        }
+
+        /* Feedback Banners */
+        .feedback-banner {
+            padding: 14px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-correct {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border-left: 4px solid #16a34a;
+        }
+
+        .feedback-incorrect {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
         }
 
         /* Results Screen Styles */
@@ -221,7 +245,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
     </style>
 </head>
@@ -230,7 +254,7 @@
     <div class="card">
         <!-- HEADER -->
         <h1 id="main-title">Franse Woorden Oefenen</h1>
-        <p class="subtitle" id="main-subtitle">Selecteer de gewenste opties en druk op Start om te oefenen.</p>
+        <p class="subtitle" id="main-subtitle">Selecteer je opties en druk op Start om te oefenen.</p>
 
         <!-- SETUP SCHERM -->
         <div id="setup-screen">
@@ -276,7 +300,10 @@
 
             <input type="text" id="answer-input" placeholder="Typ het antwoord..." autocomplete="off">
 
-            <button class="btn btn-success" id="check-btn" onclick="checkAnswer()">Controleer</button>
+            <!-- Dynamic Feedback Box -->
+            <div id="feedback-banner" class="feedback-banner hidden"></div>
+
+            <button class="btn btn-success" id="action-btn" onclick="handleAction()">Controleer</button>
             <button class="btn btn-danger" onclick="stopPractice()">Stop & Toon Resultaten</button>
         </div>
 
@@ -291,7 +318,7 @@
             <div class="results-box">
                 <h3 id="res-feedback-title">Voldoende, maar blijf oefenen! 📚</h3>
                 <p id="res-feedback-text">
-                    Je bent op de goede weg! Neem de foutenlijst hieronder aandachtig door om je kennis van landnamen en nationaliteiten verder aan te scherpen.
+                    Je bent op de goede weg! Neem de foutenlijst hieronder aandachtig door.
                 </p>
             </div>
 
@@ -307,12 +334,11 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            Site gemaakt door <a href="#">Siebe Cluyts</a>. Woorden en modules van Vocabulaire.
+            Site gemaakt door <a href="https://github.com/siebecluyts" target="_blank" rel="noopener noreferrer">Siebe Cluyts</a>. Woorden en modules van Audace1, Polpo
         </div>
     </div>
 
     <script>
-        // Woordenlijst gebaseerd op de 2 afbeeldingen
         const vocabulary = [
             // Landen / Steden
             { fr: ["l'Allemagne", "L'Allemagne"], nl: ["Duitsland"], cat: "landen" },
@@ -353,30 +379,29 @@
         let scoreGood = 0;
         let scoreTotal = 0;
         let mistakes = [];
+        let isChecked = false; // Status of we wachten op 'Volgende'
 
-        // DOM Elementen
         const setupScreen = document.getElementById("setup-screen");
         const practiceScreen = document.getElementById("practice-screen");
         const resultsScreen = document.getElementById("results-screen");
         const mainTitle = document.getElementById("main-title");
         const mainSubtitle = document.getElementById("main-subtitle");
         const answerInput = document.getElementById("answer-input");
+        const feedbackBanner = document.getElementById("feedback-banner");
+        const actionBtn = document.getElementById("action-btn");
 
-        // Enter-toets ondersteuning
         answerInput.addEventListener("keyup", function(event) {
             if (event.key === "Enter") {
-                checkAnswer();
+                handleAction();
             }
         });
 
         function startPractice() {
-            // Instellingen ophalen
             direction = document.querySelector('input[name="direction"]:checked').value;
             const useLanden = document.getElementById("cat-landen").checked;
             const useInwoners = document.getElementById("cat-inwoners").checked;
             const useTalen = document.getElementById("cat-talen").checked;
 
-            // Woorden filteren
             activeWords = vocabulary.filter(w => {
                 if (w.cat === "landen" && useLanden) return true;
                 if (w.cat === "inwoners" && useInwoners) return true;
@@ -389,13 +414,11 @@
                 return;
             }
 
-            // Reset waarden
             scoreGood = 0;
             scoreTotal = 0;
             mistakes = [];
             updateStats();
 
-            // UI Aanpassen
             setupScreen.classList.add("hidden");
             practiceScreen.classList.remove("hidden");
             mainSubtitle.innerText = "Vul de juiste vertaling in en druk op Enter.";
@@ -404,19 +427,33 @@
         }
 
         function nextQuestion() {
+            isChecked = false;
             answerInput.value = "";
+            answerInput.disabled = false;
             answerInput.focus();
+
+            feedbackBanner.classList.add("hidden");
+            feedbackBanner.className = "feedback-banner hidden";
+            actionBtn.innerText = "Controleer";
             
-            // Kies willekeurig woord
             currentWordIndex = Math.floor(Math.random() * activeWords.length);
             const item = activeWords[currentWordIndex];
 
             const promptText = direction === "nl-fr" ? item.nl[0] : item.fr[0];
-            document.getElementById("prompt-word").innerHTML = `${promptText} <span class="hint">(${item.cat})</span>`;
+            const catDisplay = item.cat === "landen" ? "Land" : item.cat === "inwoners" ? "Inwoner" : "Taal";
+            document.getElementById("prompt-word").innerHTML = `${promptText} <span class="hint">(${catDisplay})</span>`;
         }
 
         function cleanString(str) {
             return str.toLowerCase().trim().replace(/’/g, "'");
+        }
+
+        function handleAction() {
+            if (isChecked) {
+                nextQuestion();
+            } else {
+                checkAnswer();
+            }
         }
 
         function checkAnswer() {
@@ -430,8 +467,13 @@
             const isCorrect = correctAnswers.some(ans => cleanString(ans) === cleanString(userAns));
 
             scoreTotal++;
+            isChecked = true;
+            answerInput.disabled = true;
+
             if (isCorrect) {
                 scoreGood++;
+                feedbackBanner.className = "feedback-banner feedback-correct";
+                feedbackBanner.innerText = "✓ Goed gedaan!";
             } else {
                 mistakes.push({
                     question: questionText,
@@ -439,10 +481,13 @@
                     expected: correctAnswers[0],
                     cat: item.cat
                 });
+                feedbackBanner.className = "feedback-banner feedback-incorrect";
+                feedbackBanner.innerText = `✕ Fout, het was: ${correctAnswers[0]}`;
             }
 
+            feedbackBanner.classList.remove("hidden");
+            actionBtn.innerText = "Volgende (Druk Enter)";
             updateStats();
-            nextQuestion();
         }
 
         function updateStats() {
@@ -463,22 +508,20 @@
             document.getElementById("res-total").innerText = scoreTotal;
             document.getElementById("res-percentage").innerText = percentage + "%";
 
-            // Feedback tekst op basis van score
             const feedbackTitle = document.getElementById("res-feedback-title");
             const feedbackText = document.getElementById("res-feedback-text");
 
             if (percentage >= 80) {
                 feedbackTitle.innerText = "Uitstekend gedaan! 🎉";
-                feedbackText.innerText = "Je beheerst de woordenschat over landen en nationaliteiten zeer goed. Blijf herhalen om het te onderhouden!";
+                feedbackText.innerText = "Je beheerst de woordenschat over landen en nationaliteiten zeer goed. Blijf herhalen!";
             } else if (percentage >= 50) {
                 feedbackTitle.innerText = "Voldoende, maar blijf oefenen! 📚";
-                feedbackText.innerText = "Je bent op de goede weg met deze categorieën, maar er sluipt nog wat onzekerheid in de lidwoorden of hoofdletters. Neem de foutenlijst hieronder aandachtig door.";
+                feedbackText.innerText = "Je bent op de goede weg! Neem de foutenlijst hieronder aandachtig door.";
             } else {
                 feedbackTitle.innerText = "Nog even goed studeren! 💪";
-                feedbackText.innerText = "Bekijk de woordenschatlijst uit het boek nog eens goed. Let vooral op hoofdletters bij nationaliteiten en inwoners!";
+                feedbackText.innerText = "Bekijk de lijst nog eens goed. Let vooral op hoofdletters en lidwoorden!";
             }
 
-            // Foutenlijst opbouwen
             const listBody = document.getElementById("mistakes-list-body");
             const mistakesContainer = document.getElementById("mistakes-container");
             listBody.innerHTML = "";
@@ -490,7 +533,7 @@
                 mistakes.forEach(m => {
                     const div = document.createElement("div");
                     div.className = "mistake-item";
-                    div.innerHTML = `(${m.cat}) <strong>${m.question}</strong>: <span class="wrong">(${m.given || "leeg"})</span> → <span class="correct">${m.expected}</span>`;
+                    div.innerHTML = `<strong>${m.question}</strong>: <span class="wrong">(${m.given || "leeg"})</span> → <span class="correct">${m.expected}</span>`;
                     listBody.appendChild(div);
                 });
             }
@@ -499,7 +542,7 @@
         function resetToSetup() {
             resultsScreen.classList.add("hidden");
             setupScreen.classList.remove("hidden");
-            mainSubtitle.innerText = "Selecteer je modules en opties en druk op Start om te oefenen.";
+            mainSubtitle.innerText = "Selecteer je opties en druk op Start om te oefenen.";
         }
     </script>
 </body>
