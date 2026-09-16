@@ -338,7 +338,7 @@
         <div class="subtitle">Vul de juiste vertaling in en druk op Enter.</div>
         
         <div class="stats">
-            Goed: <span id="stat-correct">0</span> | Totaal behandeld: <span id="stat-total">0</span>
+            Goed: <span id="stat-correct">0</span> | Totaal behandeld: <span id="stat-total">0</span> <span id="stat-remaining-container">(nog <span id="stat-remaining">0</span>)</span>
         </div>
         
         <div class="word-to-translate">
@@ -404,17 +404,17 @@
         { fr: ["le français", "Le français"], nl: ["het Frans", "Frans"], cat: "talen" },
         { fr: ["le luxembourgeois", "Le luxembourgeois"], nl: ["het Luxemburgs", "Luxemburgs"], cat: "talen" },
 
-        // Inwoners / Nationaliteiten
-        { fr: ["un Allemand", "une Allemande", "un Allemand, une Allemande"], nl: ["een Duitser, een Duitse", "een Duitser", "een Duitse"], cat: "inwoners" },
-        { fr: ["un Américain", "une Américaine", "un Américain, une Américaine"], nl: ["een Amerikaan, een Amerikaanse", "een Amerikaan", "een Amerikaanse"], cat: "inwoners" },
-        { fr: ["un Australien", "une Australienne", "un Australien, une Australienne"], nl: ["een Australiër, een Australische", "een Australiër", "een Australische"], cat: "inwoners" },
-        { fr: ["un Belge", "une Belge", "un Belge, une Belge"], nl: ["een Belg"], cat: "inwoners" },
-        { fr: ["un Brésilien", "une Brésilienne", "un Brésilien, une Brésilienne"], nl: ["een Braziliaan, een Braziliaanse", "een Braziliaan", "een Braziliaanse"], cat: "inwoners" },
-        { fr: ["un Britannique", "une Britannique", "un Britannique, une Britannique"], nl: ["een Brit, een Britse", "een Brit", "een Britse"], cat: "inwoners" },
-        { fr: ["un Canadien", "une Canadienne", "un Canadien, une Canadienne"], nl: ["een Canadees, een Canadese", "een Canadees", "een Canadese"], cat: "inwoners" },
-        { fr: ["un Chinois", "une Chinoise", "un Chinois, une Chinoise"], nl: ["een Chinees, een Chinese", "een Chinees", "een Chinese"], cat: "inwoners" },
-        { fr: ["un Français", "une Française", "un Français, une Française"], nl: ["een Fransman, een Française", "een Fransman", "een Française"], cat: "inwoners" },
-        { fr: ["un Luxembourgeois", "une Luxembourgeoise", "un Luxembourgeois, une Luxembourgeoise"], nl: ["een Luxemburger, een Luxemburgse", "een Luxemburger", "een Luxemburgse"], cat: "inwoners" }
+        // Inwoners / Nationaliteiten (Mannelijk & Vrouwelijk)
+        { fr: ["un Allemand, une Allemande", "un Allemand/une Allemande", "un Allemand une Allemande"], nl: ["een Duitser, een Duitse", "een Duitser/een Duitse", "een Duitser een Duitse"], cat: "inwoners" },
+        { fr: ["un Américain, une Américaine", "un Américain/une Américaine", "un Américain une Américaine"], nl: ["een Amerikaan, een Amerikaanse", "een Amerikaan/een Amerikaanse", "een Amerikaan een Amerikaanse"], cat: "inwoners" },
+        { fr: ["un Australien, une Australienne", "un Australien/une Australienne", "un Australien une Australienne"], nl: ["een Australiër, een Australische", "een Australiër/een Australische", "een Australiër een Australische"], cat: "inwoners" },
+        { fr: ["un Belge, une Belge", "un Belge/une Belge", "un Belge une Belge", "un Belge"], nl: ["een Belg, een Belgische", "een Belg/een Belgische", "een Belg"], cat: "inwoners" },
+        { fr: ["un Brésilien, une Brésilienne", "un Brésilien/une Brésilienne", "un Brésilien une Brésilienne"], nl: ["een Braziliaan, een Braziliaanse", "een Braziliaan/een Braziliaanse", "een Braziliaan een Braziliaanse"], cat: "inwoners" },
+        { fr: ["un Britannique, une Britannique", "un Britannique/une Britannique", "un Britannique une Britannique"], nl: ["een Brit, een Britse", "een Brit/een Britse", "een Brit een Britse"], cat: "inwoners" },
+        { fr: ["un Canadien, une Canadienne", "un Canadien/une Canadienne", "un Canadien une Canadienne"], nl: ["een Canadees, een Canadese", "een Canadees/een Canadese", "een Canadees een Canadese"], cat: "inwoners" },
+        { fr: ["un Chinois, une Chinoise", "un Chinois/une Chinoise", "un Chinois une Chinoise"], nl: ["een Chinees, een Chinese", "een Chinees/een Chinese", "een Chinees een Chinese"], cat: "inwoners" },
+        { fr: ["un Français, une Française", "un Français/une Française", "un Français une Française"], nl: ["een Fransman, een Française", "een Fransman/een Française", "een Fransman een Française"], cat: "inwoners" },
+        { fr: ["un Luxembourgeois, une Luxembourgeoise", "un Luxembourgeois/une Luxembourgeoise", "un Luxembourgeois une Luxembourgeoise"], nl: ["een Luxemburger, een Luxemburgse", "een Luxemburger/een Luxemburgse", "een Luxemburger een Luxemburgse"], cat: "inwoners" }
     ];
 
     let activePool = [];
@@ -435,6 +435,7 @@
         const useInwoners = document.getElementById("cat-inwoners").checked;
         const useTalen = document.getElementById("cat-talen").checked;
 
+        // Maak een kopie van de geselecteerde items
         activePool = vocabulary.filter(w => {
             if (w.cat === "landen" && useLanden) return true;
             if (w.cat === "inwoners" && useInwoners) return true;
@@ -446,6 +447,9 @@
             alert("Selecteer minstens één categorie om te beginnen!");
             return;
         }
+
+        // Shuffle de items
+        activePool.sort(() => Math.random() - 0.5);
 
         totalAnswered = 0;
         correctCount = 0;
@@ -460,6 +464,11 @@
     }
 
     function nextQuestion() {
+        if (activePool.length === 0) {
+            stopQuiz();
+            return;
+        }
+
         showingFeedback = false;
         const feedbackEl = document.getElementById("feedback-container");
         feedbackEl.className = "hidden";
@@ -469,8 +478,8 @@
         inputEl.disabled = false;
         document.getElementById("btn-controleren").textContent = "Controleer";
 
-        let randomIndex = Math.floor(Math.random() * activePool.length);
-        currentItem = activePool[randomIndex];
+        // Pak het bovenste item en verwijder het uit activePool om herhaling te voorkomen
+        currentItem = activePool.pop();
 
         const promptText = direction === "nl-fr" ? currentItem.nl[0] : currentItem.fr[0];
         const catLabel = currentItem.cat === "landen" ? "Land / Stad" : currentItem.cat === "inwoners" ? "Inwoner / Nationaliteit" : "Taal";
@@ -478,6 +487,7 @@
         document.getElementById("prompt-word").textContent = promptText;
         document.getElementById("cat-badge").textContent = catLabel;
 
+        updateStats();
         inputEl.focus();
     }
 
@@ -521,18 +531,27 @@
         updateStats();
         showingFeedback = true;
         inputEl.disabled = true;
-        document.getElementById("btn-controleren").textContent = "Volgende ->";
+        document.getElementById("btn-controleren").textContent = "Volgende (Enter) ->";
     }
 
-    document.getElementById("answer-input").addEventListener("keypress", function(e) {
+    // Luister naar Enter op de hele pagina wanneer we in feedback-modus zijn
+    document.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
-            handleInputSubmission();
+            const quizScreen = document.getElementById("quiz-screen");
+            if (!quizScreen.classList.contains("hidden")) {
+                if (showingFeedback) {
+                    nextQuestion();
+                } else {
+                    handleInputSubmission();
+                }
+            }
         }
     });
 
     function updateStats() {
         document.getElementById("stat-correct").textContent = correctCount;
         document.getElementById("stat-total").textContent = totalAnswered;
+        document.getElementById("stat-remaining").textContent = activePool.length + (showingFeedback ? 0 : 1);
     }
 
     function stopQuiz() {
