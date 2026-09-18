@@ -70,8 +70,8 @@
                         <span class="text-sm font-medium text-slate-700">Talen</span>
                     </label>
                     <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
-                        <input type="checkbox" id="cat-werkwoorden" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
-                        <span class="text-sm font-medium text-slate-700">Werkwoorden / Overig</span>
+                        <input type="checkbox" id="cat-kleding" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Kleding, Weer & Overig</span>
                     </label>
                 </div>
             </div>
@@ -195,8 +195,23 @@
         { fr: ["le russe", "Le russe"], nl: ["het Russisch", "Russisch"], cat: "talen", week: 2 },
         { fr: ["un Russe, une Russe", "un Russe/une Russe", "un Russe une Russe"], nl: ["een Rus, een Russische", "een Rus/een Russische", "een Rus een Russische"], cat: "inwoners", week: 2 },
         { fr: ["la Wallonie", "La Wallonie"], nl: ["Wallonië"], cat: "landen", week: 2 },
-        { fr: ["habiter à"], nl: ["in ... wonen", "wonen in"], cat: "werkwoorden", week: 2 },
-        { fr: ["venir de"], nl: ["uit ... komen", "komen uit"], cat: "werkwoorden", week: 2 }
+        { fr: ["habiter à"], nl: ["in ... wonen", "wonen in"], cat: "kleding", week: 2 },
+        { fr: ["venir de"], nl: ["uit ... komen", "komen uit"], cat: "kleding", week: 2 },
+
+        // Woorden uit afbeelding (Kleding, Weer, Accessoires)
+        { fr: ["une averse"], nl: ["een regenbui", "een bui"], cat: "kleding", week: 2 },
+        { fr: ["une bague"], nl: ["een ring"], cat: "kleding", week: 2 },
+        { fr: ["un bonnet"], nl: ["een muts"], cat: "kleding", week: 2 },
+        { fr: ["des boucles d'oreilles"], nl: ["oorbellen"], cat: "kleding", week: 2 },
+        { fr: ["un bracelet"], nl: ["een armband"], cat: "kleding", week: 2 },
+        { fr: ["le brouillard"], nl: ["de mist"], cat: "kleding", week: 2 },
+        { fr: ["un caleçon"], nl: ["een legging", "een onderbroek"], cat: "kleding", week: 2 },
+        { fr: ["un chapeau"], nl: ["een hoed"], cat: "kleding", week: 2 },
+        { fr: ["une combinaison de ski"], nl: ["een skipak"], cat: "kleding", week: 2 },
+        { fr: ["un collier"], nl: ["een halsketting"], cat: "kleding", week: 2 },
+        { fr: ["une cravate"], nl: ["een das"], cat: "kleding", week: 2 },
+        { fr: ["un degré"], nl: ["een graad"], cat: "kleding", week: 2 },
+        { fr: ["une écharpe"], nl: ["een sjaal"], cat: "kleding", week: 2 }
     ];
 
     let activePool = [];
@@ -220,7 +235,7 @@
         const useLanden = document.getElementById("cat-landen").checked;
         const useInwoners = document.getElementById("cat-inwoners").checked;
         const useTalen = document.getElementById("cat-talen").checked;
-        const useWerkwoorden = document.getElementById("cat-werkwoorden").checked;
+        const useKleding = document.getElementById("cat-kleding").checked;
 
         // Filter vocabulary based on selection
         activePool = vocabulary.filter(w => {
@@ -230,7 +245,7 @@
             if (w.cat === "landen" && useLanden) return true;
             if (w.cat === "inwoners" && useInwoners) return true;
             if (w.cat === "talen" && useTalen) return true;
-            if (w.cat === "werkwoorden" && useWerkwoorden) return true;
+            if (w.cat === "kleding" && useKleding) return true;
 
             return false;
         });
@@ -278,7 +293,7 @@
             landen: "Land / Stad",
             inwoners: "Inwoner (m/v)",
             talen: "Taal",
-            werkwoorden: "Werkwoord / Uitdrukking"
+            kleding: "Kleding / Weer / Overig"
         };
 
         document.getElementById("prompt-word").textContent = promptText;
