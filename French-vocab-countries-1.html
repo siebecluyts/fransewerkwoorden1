@@ -3,418 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Woorden Oefenen - Landen & Nationaliteiten</title>
+    <title>Franse Woorden Oefenen - Landen, Talen & Inwoners</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
-            background-color: #f0f4f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 650px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 24px;
-            color: #1e293b;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        .card {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 24px;
-            background-color: #f8fafc;
-            margin-bottom: 24px;
-            text-align: left;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 12px;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 16px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #334155;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .checkbox-label input {
-            margin-right: 8px;
-            width: 16px;
-            height: 16px;
-            accent-color: #2563eb;
-            cursor: pointer;
-        }
-
-        .divider {
-            height: 1px;
-            background-color: #e2e8f0;
-            margin: 20px 0;
-        }
-
-        .stats {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-
-        .word-to-translate {
-            font-size: 28px;
-            color: #2563eb;
-            font-weight: 700;
-            margin: 20px 0 10px 0;
-            line-height: 1.3;
-        }
-
-        .cat-badge {
-            display: block;
-            font-size: 13px;
-            color: #ea580c;
-            background-color: #fff7ed;
-            border: 1px solid #ffedd5;
-            padding: 4px 12px;
-            border-radius: 20px;
-            width: max-content;
-            margin: 8px auto 16px auto;
-            font-weight: 600;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 16px;
-            border: 2px solid #cbd5e1;
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.2s;
-            margin-bottom: 16px;
-        }
-
-        .input-field:focus {
-            border-color: #2563eb;
-        }
-
-        .feedback-inline {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 12px 0 20px 0;
-            padding: 12px;
-            border-radius: 6px;
-            text-align: left;
-        }
-
-        .feedback-correct {
-            background-color: #f0fdf4;
-            color: #16a34a;
-            border-left: 4px solid #16a34a;
-        }
-
-        .feedback-wrong {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border-left: 4px solid #dc2626;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.15s, transform 0.1s;
-            margin-bottom: 12px;
-        }
-
-        .btn:active {
-            transform: scale(0.99);
-        }
-
-        .btn-primary {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #059669;
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
-
-        .btn-secondary {
-            background-color: #3b82f6;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #2563eb;
-        }
-
-        .advice-box {
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            border-radius: 6px;
-            text-align: left;
-            margin-bottom: 24px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .advice-title {
-            font-weight: 700;
-            color: #1e3a8a;
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .error-section-title {
-            text-align: left;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #1e293b;
-        }
-
-        .error-list {
-            text-align: left;
-            margin-bottom: 24px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .error-item {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .error-item .cat {
-            color: #64748b;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .error-item .prompt {
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .error-item .wrong {
-            color: #ef4444;
-            text-decoration: line-through;
-            margin: 0 4px;
-        }
-
-        .error-item .correct {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .result-heading {
-            font-size: 20px;
-            font-weight: 700;
-            text-align: left;
-            margin-bottom: 12px;
-            color: #1e293b;
-        }
-
-        .result-text {
-            text-align: left;
-            font-size: 15px;
-            color: #475569;
-            margin-bottom: 20px;
-        }
-
-        .footer {
-            margin-top: 24px;
-            font-size: 13px;
-            color: #94a3b8;
-        }
-
-        .footer a {
-            color: #3b82f6;
-            text-decoration: underline;
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex items-center justify-center p-4">
 
-<div class="container">
-    <!-- Startscherm -->
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6 md:p-8 my-6">
+
+    <!-- START SCHERM -->
     <div id="start-screen">
-        <h1>Franse Woorden Oefenen</h1>
-        <div class="subtitle">Selecteer je opties en druk op Start om te oefenen.</div>
-        
-        <div class="card">
-            <div class="card-title">Vertaalrichting:</div>
-            <div class="grid-2">
-                <label class="checkbox-label">
-                    <input type="radio" name="direction" value="nl-fr" checked> Nederlands → Frans
-                </label>
-                <label class="checkbox-label">
-                    <input type="radio" name="direction" value="fr-nl"> Frans → Nederlands
-                </label>
+        <div class="text-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Franse Woorden Oefenen</h1>
+            <p class="text-slate-500 text-sm md:text-base">Audace 1 / Polpo - Woordenschat Oefenmodule</p>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 space-y-5">
+            <!-- Weken Filter -->
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Selecteer Weken / Lessen:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="week-1" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Week 1 (1 - 25)</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="week-2" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Week 2 (26+)</span>
+                    </label>
+                </div>
             </div>
 
-            <div class="divider"></div>
+            <div class="border-t border-slate-200 pt-4">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Vertaalrichting:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="radio" name="direction" value="nl-fr" checked class="w-4 h-4 text-blue-600 accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Nederlands → Frans</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="radio" name="direction" value="fr-nl" class="w-4 h-4 text-blue-600 accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Frans → Nederlands</span>
+                    </label>
+                </div>
+            </div>
 
-            <div class="card-title">Kies categorieën om te oefenen:</div>
-            <div class="grid-2">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="cat-landen" checked> Landen & Steden
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="cat-inwoners" checked> Inwoners / Nationaliteiten
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="cat-talen" checked> Talen
-                </label>
+            <!-- Categorieën Filter -->
+            <div class="border-t border-slate-200 pt-4">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Categorieën:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="cat-landen" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Landen & Steden</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="cat-inwoners" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Inwoners (m/v)</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="cat-talen" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Talen</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="cat-werkwoorden" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
+                        <span class="text-sm font-medium text-slate-700">Werkwoorden / Overig</span>
+                    </label>
+                </div>
             </div>
         </div>
-        
-        <button class="btn btn-secondary" onclick="startQuiz()">Start Oefenen</button>
+
+        <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-4 rounded-xl transition shadow-md hover:shadow-lg active:scale-[0.99]">
+            Start Oefenen
+        </button>
     </div>
 
-    <!-- Quizscherm -->
+    <!-- QUIZ SCHERM -->
     <div id="quiz-screen" class="hidden">
-        <h1>Franse Woorden Oefenen</h1>
-        <div class="subtitle">Vul de juiste vertaling in en druk op Enter.</div>
-        
-        <div class="stats">
-            Goed: <span id="stat-correct">0</span> | Totaal behandeld: <span id="stat-total">0</span> <span id="stat-remaining-container">(nog <span id="stat-remaining">0</span>)</span>
+        <div class="flex justify-between items-center text-sm font-medium text-slate-500 mb-4 pb-2 border-b border-slate-100">
+            <div>
+                Goed: <span id="stat-correct" class="text-emerald-600 font-bold">0</span> | 
+                Behandeld: <span id="stat-total" class="font-bold text-slate-700">0</span>
+            </div>
+            <div>
+                Resterend: <span id="stat-remaining" class="font-bold text-blue-600">0</span>
+            </div>
         </div>
-        
-        <div class="word-to-translate">
-            <span id="prompt-word">...</span>
-            <div id="cat-badge" class="cat-badge">Land</div>
+
+        <div class="text-center my-6">
+            <span id="cat-badge" class="inline-block px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-xs font-semibold uppercase tracking-wide mb-3">
+                Categorie
+            </span>
+            <div id="prompt-word" class="text-2xl md:text-3xl font-extrabold text-blue-600 leading-tight">
+                ...
+            </div>
         </div>
-        
-        <input type="text" id="answer-input" class="input-field" placeholder="Typ het antwoord..." autocomplete="off">
-        
-        <div id="feedback-container" class="hidden"></div>
-        
-        <button class="btn btn-primary" id="btn-controleren" onclick="handleInputSubmission()">Controleer</button>
-        <button class="btn btn-danger" onclick="stopQuiz()">Stop & Toon Resultaten</button>
+
+        <div class="mb-4">
+            <input type="text" id="answer-input" class="w-full p-3.5 text-lg border-2 border-slate-300 rounded-xl outline-none focus:border-blue-600 transition" placeholder="Typ het antwoord..." autocomplete="off">
+        </div>
+
+        <div id="feedback-container" class="hidden mb-4 p-4 rounded-xl text-base font-medium border-l-4"></div>
+
+        <div class="space-y-2">
+            <button id="btn-controleren" onclick="handleInputSubmission()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition shadow active:scale-[0.99]">
+                Controleer (Enter)
+            </button>
+            <button onclick="stopQuiz()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 rounded-xl transition text-sm">
+                Stop & Toon Resultaten
+            </button>
+        </div>
     </div>
 
-    <!-- Eindscherm -->
+    <!-- EIND SCHERM -->
     <div id="end-screen" class="hidden">
-        <h1>Franse Woorden Oefenen</h1>
-        <div class="subtitle">Overzicht en analyse van je prestaties.</div>
-        
-        <div class="result-heading">Jouw Resultaten 📊</div>
-        <div class="result-text">
-            Je hebt <strong id="res-correct">0</strong> van de <strong id="res-total">0</strong> beantwoorde woorden goed! (<strong id="res-percent">0%</strong>)
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Oefensessie Afgerond 🎉</h2>
+            <p class="text-slate-500 text-sm">Hier is je overzicht en resultaat</p>
         </div>
-        
-        <div class="advice-box">
-            <div class="advice-title" id="advice-title">Analyse & Gepersonaliseerd Advies:</div>
-            <div id="advice-text">Laadt advies...</div>
+
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-6 text-center">
+            <div class="text-3xl font-black text-blue-600 mb-1" id="res-percent">0%</div>
+            <div class="text-sm font-medium text-slate-600">
+                Je hebt <strong id="res-correct" class="text-slate-800">0</strong> van de <strong id="res-total" class="text-slate-800">0</strong> vragen goed beantwoord.
+            </div>
         </div>
-        
-        <div id="error-container">
-            <div class="error-section-title">Foutjes om na te kijken:</div>
-            <div class="error-list" id="error-list"></div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+            <div id="advice-title" class="font-bold text-slate-800 text-base mb-1">Analyse</div>
+            <div id="advice-text" class="text-slate-600 text-sm leading-relaxed"></div>
         </div>
-        
-        <button class="btn btn-secondary" onclick="restartQuiz()">Opnieuw Oefenen</button>
+
+        <div id="error-section" class="mb-6">
+            <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider mb-3">Foutjes om na te kijken:</h3>
+            <div id="error-list" class="max-h-60 overflow-y-auto space-y-2 pr-1"></div>
+        </div>
+
+        <button onclick="restartQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 rounded-xl transition shadow active:scale-[0.99]">
+            Opnieuw Oefenen
+        </button>
     </div>
 
-    <div class="footer">
-        Site gemaakt door <a href="https://github.com/siebecluyts" target="_blank" rel="noopener noreferrer">Siebe Cluyts</a>. Woorden en modules van Audace1, Polpo
+    <!-- FOOTER -->
+    <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
+        Site gemaakt door <a href="https://github.com/siebecluyts" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">Siebe Cluyts</a> | Audace 1, Polpo
     </div>
 </div>
 
 <script>
+    // Complete vocabulary data array mapped from images & structured by weeks (25 items/week)
     const vocabulary = [
-        // Landen / Steden
-        { fr: ["l'Allemagne", "L'Allemagne"], nl: ["Duitsland"], cat: "landen" },
-        { fr: ["l'Australie", "L'Australie"], nl: ["Australië"], cat: "landen" },
-        { fr: ["la Belgique", "La Belgique"], nl: ["België"], cat: "landen" },
-        { fr: ["le Brésil", "Le Brésil"], nl: ["Brazilië"], cat: "landen" },
-        { fr: ["Bruxelles"], nl: ["Brussel"], cat: "landen" },
-        { fr: ["le Canada", "Le Canada"], nl: ["Canada"], cat: "landen" },
-        { fr: ["la Chine", "La Chine"], nl: ["China"], cat: "landen" },
-        { fr: ["la Flandre", "La Flandre"], nl: ["Vlaanderen"], cat: "landen" },
-        { fr: ["la France", "La France"], nl: ["Frankrijk"], cat: "landen" },
-        { fr: ["les États-Unis", "les Etats-Unis", "Les États-Unis"], nl: ["Amerika", "de Verenigde Staten"], cat: "landen" },
-        { fr: ["le Luxembourg", "Le Luxembourg"], nl: ["Luxemburg"], cat: "landen" },
+        // === WEEK 1 (Items 1 - 25) ===
+        { fr: ["l'Allemagne", "L'Allemagne"], nl: ["Duitsland"], cat: "landen", week: 1 },
+        { fr: ["l'allemand", "L'allemand"], nl: ["het Duits", "Duits"], cat: "talen", week: 1 },
+        { fr: ["un Allemand, une Allemande", "un Allemand/une Allemande", "un Allemand une Allemande"], nl: ["een Duitser, een Duitse", "een Duitser/een Duitse", "een Duitser een Duitse"], cat: "inwoners", week: 1 },
+        { fr: ["un Américain, une Américaine", "un Américain/une Américaine", "un Américain une Américaine"], nl: ["een Amerikaan, een Amerikaanse", "een Amerikaan/een Amerikaanse", "een Amerikaan een Amerikaanse"], cat: "inwoners", week: 1 },
+        { fr: ["l'anglais", "L'anglais"], nl: ["het Engels", "Engels"], cat: "talen", week: 1 },
+        { fr: ["l'Australie", "L'Australie"], nl: ["Australië"], cat: "landen", week: 1 },
+        { fr: ["un Australien, une Australienne", "un Australien/une Australienne", "un Australien une Australienne"], nl: ["een Australiër, een Australische", "een Australiër/een Australische", "een Australiër een Australische"], cat: "inwoners", week: 1 },
+        { fr: ["un Belge, une Belge", "un Belge/une Belge", "un Belge une Belge", "un Belge"], nl: ["een Belg, een Belgische", "een Belg/een Belgische", "een Belg"], cat: "inwoners", week: 1 },
+        { fr: ["la Belgique", "La Belgique"], nl: ["België"], cat: "landen", week: 1 },
+        { fr: ["le Brésil", "Le Brésil"], nl: ["Brazilië"], cat: "landen", week: 1 },
+        { fr: ["un Brésilien, une Brésilienne", "un Brésilien/une Brésilienne", "un Brésilien une Brésilienne"], nl: ["een Braziliaan, een Braziliaanse", "een Braziliaan/een Braziliaanse", "een Braziliaan een Braziliaanse"], cat: "inwoners", week: 1 },
+        { fr: ["un Britannique, une Britannique", "un Britannique/une Britannique", "un Britannique une Britannique"], nl: ["een Brit, een Britse", "een Brit/een Britse", "een Brit een Britse"], cat: "inwoners", week: 1 },
+        { fr: ["Bruxelles"], nl: ["Brussel"], cat: "landen", week: 1 },
+        { fr: ["le Canada", "Le Canada"], nl: ["Canada"], cat: "landen", week: 1 },
+        { fr: ["un Canadien, une Canadienne", "un Canadien/une Canadienne", "un Canadien une Canadienne"], nl: ["een Canadees, een Canadese", "een Canadees/een Canadese", "een Canadees een Canadese"], cat: "inwoners", week: 1 },
+        { fr: ["la Chine", "La Chine"], nl: ["China"], cat: "landen", week: 1 },
+        { fr: ["le chinois", "Le chinois"], nl: ["het Chinees", "Chinees"], cat: "talen", week: 1 },
+        { fr: ["un Chinois, une Chinoise", "un Chinois/une Chinoise", "un Chinois une Chinoise"], nl: ["een Chinees, een Chinese", "een Chinees/een Chinese", "een Chinees een Chinese"], cat: "inwoners", week: 1 },
+        { fr: ["la Flandre", "La Flandre"], nl: ["Vlaanderen"], cat: "landen", week: 1 },
+        { fr: ["la France", "La France"], nl: ["Frankrijk"], cat: "landen", week: 1 },
+        { fr: ["le français", "Le français"], nl: ["het Frans", "Frans"], cat: "talen", week: 1 },
+        { fr: ["un Français, une Française", "un Français/une Française", "un Français une Française"], nl: ["een Fransman, een Française", "een Fransman/een Française", "een Fransman een Française"], cat: "inwoners", week: 1 },
+        { fr: ["les États-Unis", "les Etats-Unis", "Les États-Unis"], nl: ["Amerika", "de Verenigde Staten"], cat: "landen", week: 1 },
+        { fr: ["le Luxembourg", "Le Luxembourg"], nl: ["Luxemburg"], cat: "landen", week: 1 },
+        { fr: ["le luxembourgeois", "Le luxembourgeois"], nl: ["het Luxemburgs", "Luxemburgs"], cat: "talen", week: 1 },
 
-        // Talen
-        { fr: ["l'allemand", "L'allemand"], nl: ["het Duits", "Duits"], cat: "talen" },
-        { fr: ["l'anglais", "L'anglais"], nl: ["het Engels", "Engels"], cat: "talen" },
-        { fr: ["le chinois", "Le chinois"], nl: ["het Chinees", "Chinees"], cat: "talen" },
-        { fr: ["le français", "Le français"], nl: ["het Frans", "Frans"], cat: "talen" },
-        { fr: ["le luxembourgeois", "Le luxembourgeois"], nl: ["het Luxemburgs", "Luxemburgs"], cat: "talen" },
-
-        // Inwoners / Nationaliteiten (Mannelijk & Vrouwelijk)
-        { fr: ["un Allemand, une Allemande", "un Allemand/une Allemande", "un Allemand une Allemande"], nl: ["een Duitser, een Duitse", "een Duitser/een Duitse", "een Duitser een Duitse"], cat: "inwoners" },
-        { fr: ["un Américain, une Américaine", "un Américain/une Américaine", "un Américain une Américaine"], nl: ["een Amerikaan, een Amerikaanse", "een Amerikaan/een Amerikaanse", "een Amerikaan een Amerikaanse"], cat: "inwoners" },
-        { fr: ["un Australien, une Australienne", "un Australien/une Australienne", "un Australien une Australienne"], nl: ["een Australiër, een Australische", "een Australiër/een Australische", "een Australiër een Australische"], cat: "inwoners" },
-        { fr: ["un Belge, une Belge", "un Belge/une Belge", "un Belge une Belge", "un Belge"], nl: ["een Belg, een Belgische", "een Belg/een Belgische", "een Belg"], cat: "inwoners" },
-        { fr: ["un Brésilien, une Brésilienne", "un Brésilien/une Brésilienne", "un Brésilien une Brésilienne"], nl: ["een Braziliaan, een Braziliaanse", "een Braziliaan/een Braziliaanse", "een Braziliaan een Braziliaanse"], cat: "inwoners" },
-        { fr: ["un Britannique, une Britannique", "un Britannique/une Britannique", "un Britannique une Britannique"], nl: ["een Brit, een Britse", "een Brit/een Britse", "een Brit een Britse"], cat: "inwoners" },
-        { fr: ["un Canadien, une Canadienne", "un Canadien/une Canadienne", "un Canadien une Canadienne"], nl: ["een Canadees, een Canadese", "een Canadees/een Canadese", "een Canadees een Canadese"], cat: "inwoners" },
-        { fr: ["un Chinois, une Chinoise", "un Chinois/une Chinoise", "un Chinois une Chinoise"], nl: ["een Chinees, een Chinese", "een Chinees/een Chinese", "een Chinees een Chinese"], cat: "inwoners" },
-        { fr: ["un Français, une Française", "un Français/une Française", "un Français une Française"], nl: ["een Fransman, een Française", "een Fransman/een Française", "een Fransman een Française"], cat: "inwoners" },
-        { fr: ["un Luxembourgeois, une Luxembourgeoise", "un Luxembourgeois/une Luxembourgeoise", "un Luxembourgeois une Luxembourgeoise"], nl: ["een Luxemburger, een Luxemburgse", "een Luxemburger/een Luxemburgse", "een Luxemburger een Luxemburgse"], cat: "inwoners" }
+        // === WEEK 2 (Items 26+) ===
+        { fr: ["un Luxembourgeois, une Luxembourgeoise", "un Luxembourgeois/une Luxembourgeoise", "un Luxembourgeois une Luxembourgeoise"], nl: ["een Luxemburger, een Luxemburgse", "een Luxemburger/een Luxemburgse", "een Luxemburger een Luxemburgse"], cat: "inwoners", week: 2 },
+        { fr: ["le néerlandais", "Le néerlandais"], nl: ["het Nederlands", "Nederlands"], cat: "talen", week: 2 },
+        { fr: ["un Néerlandais, une Néerlandaise", "un Néerlandais/une Néerlandaise", "un Néerlandais une Néerlandaise"], nl: ["een Nederlander, een Nederlandse", "een Nederlander/een Nederlandse", "een Nederlander een Nederlandse"], cat: "inwoners", week: 2 },
+        { fr: ["les Pays-Bas", "Les Pays-Bas"], nl: ["Nederland"], cat: "landen", week: 2 },
+        { fr: ["le portugais", "Le portugais"], nl: ["het Portugees", "Portugees"], cat: "talen", week: 2 },
+        { fr: ["le Royaume-Uni", "Le Royaume-Uni"], nl: ["het Verenigd Koninkrijk", "Verenigd Koninkrijk"], cat: "landen", week: 2 },
+        { fr: ["la Russie", "La Russie"], nl: ["Rusland"], cat: "landen", week: 2 },
+        { fr: ["le russe", "Le russe"], nl: ["het Russisch", "Russisch"], cat: "talen", week: 2 },
+        { fr: ["un Russe, une Russe", "un Russe/une Russe", "un Russe une Russe"], nl: ["een Rus, een Russische", "een Rus/een Russische", "een Rus een Russische"], cat: "inwoners", week: 2 },
+        { fr: ["la Wallonie", "La Wallonie"], nl: ["Wallonië"], cat: "landen", week: 2 },
+        { fr: ["habiter à"], nl: ["in ... wonen", "wonen in"], cat: "werkwoorden", week: 2 },
+        { fr: ["venir de"], nl: ["uit ... komen", "komen uit"], cat: "werkwoorden", week: 2 }
     ];
 
     let activePool = [];
@@ -425,30 +207,40 @@
     let userErrors = [];
     let showingFeedback = false;
 
+    // Clean string helper function for loose matching
     function cleanString(str) {
         return str.trim().toLowerCase().replace(/’/g, "'").replace(/\s+/g, ' ');
     }
 
     function startQuiz() {
         direction = document.querySelector('input[name="direction"]:checked').value;
+        const useWeek1 = document.getElementById("week-1").checked;
+        const useWeek2 = document.getElementById("week-2").checked;
+
         const useLanden = document.getElementById("cat-landen").checked;
         const useInwoners = document.getElementById("cat-inwoners").checked;
         const useTalen = document.getElementById("cat-talen").checked;
+        const useWerkwoorden = document.getElementById("cat-werkwoorden").checked;
 
-        // Maak een kopie van de geselecteerde items
+        // Filter vocabulary based on selection
         activePool = vocabulary.filter(w => {
+            const matchesWeek = (w.week === 1 && useWeek1) || (w.week === 2 && useWeek2);
+            if (!matchesWeek) return false;
+
             if (w.cat === "landen" && useLanden) return true;
             if (w.cat === "inwoners" && useInwoners) return true;
             if (w.cat === "talen" && useTalen) return true;
+            if (w.cat === "werkwoorden" && useWerkwoorden) return true;
+
             return false;
         });
 
         if (activePool.length === 0) {
-            alert("Selecteer minstens één categorie om te beginnen!");
+            alert("Selecteer minstens één week en één categorie om te beginnen!");
             return;
         }
 
-        // Shuffle de items
+        // Shuffle pool
         activePool.sort(() => Math.random() - 0.5);
 
         totalAnswered = 0;
@@ -471,21 +263,26 @@
 
         showingFeedback = false;
         const feedbackEl = document.getElementById("feedback-container");
-        feedbackEl.className = "hidden";
+        feedbackEl.className = "hidden mb-4 p-4 rounded-xl text-base font-medium border-l-4";
 
         const inputEl = document.getElementById("answer-input");
         inputEl.value = "";
         inputEl.disabled = false;
-        document.getElementById("btn-controleren").textContent = "Controleer";
+        document.getElementById("btn-controleren").textContent = "Controleer (Enter)";
 
-        // Pak het bovenste item en verwijder het uit activePool om herhaling te voorkomen
+        // Pop item to ensure no repetition
         currentItem = activePool.pop();
 
         const promptText = direction === "nl-fr" ? currentItem.nl[0] : currentItem.fr[0];
-        const catLabel = currentItem.cat === "landen" ? "Land / Stad" : currentItem.cat === "inwoners" ? "Inwoner / Nationaliteit" : "Taal";
+        const catMap = {
+            landen: "Land / Stad",
+            inwoners: "Inwoner (m/v)",
+            talen: "Taal",
+            werkwoorden: "Werkwoord / Uitdrukking"
+        };
 
         document.getElementById("prompt-word").textContent = promptText;
-        document.getElementById("cat-badge").textContent = catLabel;
+        document.getElementById("cat-badge").textContent = catMap[currentItem.cat] || currentItem.cat;
 
         updateStats();
         inputEl.focus();
@@ -514,15 +311,15 @@
 
         if (isCorrect) {
             correctCount++;
-            feedbackEl.className = "feedback-inline feedback-correct";
+            feedbackEl.className = "mb-4 p-4 rounded-xl text-base font-medium border-l-4 bg-emerald-50 text-emerald-800 border-emerald-500";
             feedbackEl.textContent = "✓ Goed gedaan!";
         } else {
-            feedbackEl.className = "feedback-inline feedback-wrong";
-            feedbackEl.textContent = `✕ Fout, het was: ${correctAnswers[0]}`;
+            feedbackEl.className = "mb-4 p-4 rounded-xl text-base font-medium border-l-4 bg-rose-50 text-rose-800 border-rose-500";
+            feedbackEl.textContent = `✕ Fout, het juiste antwoord was: ${correctAnswers[0]}`;
 
             userErrors.push({
                 prompt: questionText,
-                cat: currentItem.cat === "landen" ? "Land" : currentItem.cat === "inwoners" ? "Inwoner" : "Taal",
+                cat: currentItem.cat,
                 wrong: inputEl.value || "(niets ingevuld)",
                 correct: correctAnswers[0]
             });
@@ -531,10 +328,10 @@
         updateStats();
         showingFeedback = true;
         inputEl.disabled = true;
-        document.getElementById("btn-controleren").textContent = "Volgende (Enter) ->";
+        document.getElementById("btn-controleren").textContent = "Volgende (Enter) →";
     }
 
-    // Luister naar Enter op de hele pagina wanneer we in feedback-modus zijn
+    // Global Enter key handler
     document.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             const quizScreen = document.getElementById("quiz-screen");
@@ -560,11 +357,10 @@
 
         document.getElementById("res-correct").textContent = correctCount;
         document.getElementById("res-total").textContent = totalAnswered;
-        
+
         const percent = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
         document.getElementById("res-percent").textContent = `${percent}%`;
 
-        // Advies genereren
         const adviceTitle = document.getElementById("advice-title");
         const adviceText = document.getElementById("advice-text");
 
@@ -572,32 +368,35 @@
             adviceTitle.textContent = "Geen resultaten";
             adviceText.textContent = "Je hebt geen vragen beantwoord.";
         } else if (percent === 100) {
-            adviceTitle.textContent = "Uitstekend gedaan! 🎉";
-            adviceText.textContent = "Perfecte score! Je beheerst de woordenschat over landen en nationaliteiten zeer goed.";
+            adviceTitle.textContent = "Perfect! 🎉";
+            adviceText.textContent = "Uitstekend gedaan! Je beheerst alle geselecteerde Franse woorden foutloos.";
         } else if (percent >= 80) {
             adviceTitle.textContent = "Zeer Goed! 👍";
-            adviceText.textContent = "Je kent het grootste deel van de woorden goed. Bekijk de foutjes hieronder om je kennis te perfectioneren.";
+            adviceText.textContent = "Je hebt het merendeel goed. Neem de kleine foutjes hieronder nog even doorgelopen.";
         } else if (percent >= 50) {
-            adviceTitle.textContent = "Voldoende, maar blijf oefenen! 📚";
-            adviceText.textContent = "Je bent op de goede weg! Let vooral op lidwoorden en hoofdletters bij het instuderen.";
+            adviceTitle.textContent = "Goed geprobeerd! 📚";
+            adviceText.textContent = "Je kent al veel woorden. Let extra op lidwoorden (un/une, le/la) en vrouwelijke uitgangen.";
         } else {
-            adviceTitle.textContent = "Nog even goed studeren! 💪";
-            adviceText.textContent = "Bekijk de lijst hieronder aandachtig. Herhaling is de sleutel tot succes!";
+            adviceTitle.textContent = "Blijf Oefenen! 💪";
+            adviceText.textContent = "Herhaling is het geheim. Neem de foute woorden rustig door en probeer het nog een keer.";
         }
 
-        // Foutenlijst opbouwen
+        // Render error analysis
         const errorList = document.getElementById("error-list");
         errorList.innerHTML = "";
 
         if (userErrors.length === 0) {
-            errorList.innerHTML = "<div style='color: #10b981; font-weight: 600;'>Geen fouten gemaakt! Bravo!</div>";
+            errorList.innerHTML = "<div class='text-emerald-600 font-semibold text-sm'>Geen fouten gemaakt! Fantastisch!</div>";
         } else {
             userErrors.forEach(err => {
                 const item = document.createElement("div");
-                item.className = "error-item";
+                item.className = "p-3 bg-rose-50 border-l-4 border-rose-500 rounded-r-lg text-sm";
                 item.innerHTML = `
-                    <div><span class="cat">${err.cat}</span></div>
-                    <div><span class="prompt">${err.prompt}</span>: <span class="wrong">${err.wrong}</span> → <span class="correct">${err.correct}</span></div>
+                    <div class="font-bold text-slate-800">${err.prompt}</div>
+                    <div class="text-slate-600 mt-1">
+                        Jouw antwoord: <span class="line-through text-rose-600 font-medium">${err.wrong}</span><br>
+                        Juist: <span class="text-emerald-600 font-bold">${err.correct}</span>
+                    </div>
                 `;
                 errorList.appendChild(item);
             });
@@ -609,6 +408,5 @@
         document.getElementById("start-screen").classList.remove("hidden");
     }
 </script>
-
 </body>
 </html>
