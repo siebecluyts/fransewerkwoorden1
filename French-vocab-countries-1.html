@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franse Woorden Oefenen - Landen, Talen & Inwoners</title>
+    <title>Franse Woorden Oefenen - Week 1, 2 & 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -20,21 +20,25 @@
     <div id="start-screen">
         <div class="text-center mb-6">
             <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Franse Woorden Oefenen</h1>
-            <p class="text-slate-500 text-sm md:text-base">Audace 1 / Polpo - Woordenschat Oefenmodule</p>
+            <p class="text-slate-500 text-sm md:text-base">Audace 1 / Polpo - Oefenmodule (Week 1, 2 & 3)</p>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 space-y-5">
             <!-- Weken Filter -->
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Selecteer Weken / Lessen:</label>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-2">
                     <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
-                        <input type="checkbox" id="week-1" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
-                        <span class="text-sm font-medium text-slate-700">Week 1 (1 - 25)</span>
+                        <input type="checkbox" id="week-1" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2">
+                        <span class="text-sm font-medium text-slate-700">Week 1</span>
                     </label>
                     <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
-                        <input type="checkbox" id="week-2" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
-                        <span class="text-sm font-medium text-slate-700">Week 2 (26 - 50)</span>
+                        <input type="checkbox" id="week-2" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2">
+                        <span class="text-sm font-medium text-slate-700">Week 2</span>
+                    </label>
+                    <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
+                        <input type="checkbox" id="week-3" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2">
+                        <span class="text-sm font-medium text-slate-700">Week 3</span>
                     </label>
                 </div>
             </div>
@@ -71,7 +75,7 @@
                     </label>
                     <label class="flex items-center p-2.5 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100 transition">
                         <input type="checkbox" id="cat-kleding" checked class="w-4 h-4 text-blue-600 rounded accent-blue-600 mr-2.5">
-                        <span class="text-sm font-medium text-slate-700">Kleding, Weer & Overig</span>
+                        <span class="text-sm font-medium text-slate-700">Kleding, Weer & Zinnen</span>
                     </label>
                 </div>
             </div>
@@ -155,9 +159,9 @@
 </div>
 
 <script>
-    // Complete vocabulary data array mapped from images & structured by weeks (25 items/week)
+    // Volledige woordenlijst inclusief Week 1, Week 2 en Week 3
     const vocabulary = [
-        // === WEEK 1 (Items 1 - 25) ===
+        // === WEEK 1 ===
         { fr: ["l'Allemagne", "L'Allemagne"], nl: ["Duitsland"], cat: "landen", week: 1 },
         { fr: ["l'allemand", "L'allemand"], nl: ["het Duits", "Duits"], cat: "talen", week: 1 },
         { fr: ["un Allemand, une Allemande", "un Allemand/une Allemande", "un Allemand une Allemande"], nl: ["een Duitser, een Duitse", "een Duitser/een Duitse", "een Duitser een Duitse"], cat: "inwoners", week: 1 },
@@ -179,12 +183,12 @@
         { fr: ["la Flandre", "La Flandre"], nl: ["Vlaanderen"], cat: "landen", week: 1 },
         { fr: ["la France", "La France"], nl: ["Frankrijk"], cat: "landen", week: 1 },
         { fr: ["le français", "Le français"], nl: ["het Frans", "Frans"], cat: "talen", week: 1 },
-        { fr: ["un Français, une Française", "un Français/une Française", "un Français une Française"], nl: ["een Fransman, een Fransvrouw", "een Fransman/een Fransvrouw", "een Fransman een Fransvrouw"], cat: "inwoners", week: 1 },
+        { fr: ["un Français, une Française", "un Français/une Française", "un Français une Française"], nl: ["een Fransman, een Française", "een Fransman/een Française", "een Fransman een Française"], cat: "inwoners", week: 1 },
         { fr: ["les États-Unis", "les Etats-Unis", "Les États-Unis"], nl: ["Amerika", "de Verenigde Staten"], cat: "landen", week: 1 },
         { fr: ["le Luxembourg", "Le Luxembourg"], nl: ["Luxemburg"], cat: "landen", week: 1 },
         { fr: ["le luxembourgeois", "Le luxembourgeois"], nl: ["het Luxemburgs", "Luxemburgs"], cat: "talen", week: 1 },
 
-        // === WEEK 2 (Items 26+) ===
+        // === WEEK 2 ===
         { fr: ["un Luxembourgeois, une Luxembourgeoise", "un Luxembourgeois/une Luxembourgeoise", "un Luxembourgeois une Luxembourgeoise"], nl: ["een Luxemburger, een Luxemburgse", "een Luxemburger/een Luxemburgse", "een Luxemburger een Luxemburgse"], cat: "inwoners", week: 2 },
         { fr: ["le néerlandais", "Le néerlandais"], nl: ["het Nederlands", "Nederlands"], cat: "talen", week: 2 },
         { fr: ["un Néerlandais, une Néerlandaise", "un Néerlandais/une Néerlandaise", "un Néerlandais une Néerlandaise"], nl: ["een Nederlander, een Nederlandse", "een Nederlander/een Nederlandse", "een Nederlander een Nederlandse"], cat: "inwoners", week: 2 },
@@ -197,8 +201,6 @@
         { fr: ["la Wallonie", "La Wallonie"], nl: ["Wallonië"], cat: "landen", week: 2 },
         { fr: ["habiter à"], nl: ["in ... wonen", "wonen in"], cat: "kleding", week: 2 },
         { fr: ["venir de"], nl: ["uit ... komen", "komen uit"], cat: "kleding", week: 2 },
-
-        // Woorden uit afbeelding (Kleding, Weer, Accessoires)
         { fr: ["une averse"], nl: ["een regenbui", "een bui"], cat: "kleding", week: 2 },
         { fr: ["une bague"], nl: ["een ring"], cat: "kleding", week: 2 },
         { fr: ["un bonnet"], nl: ["een muts"], cat: "kleding", week: 2 },
@@ -211,7 +213,34 @@
         { fr: ["un collier"], nl: ["een halsketting"], cat: "kleding", week: 2 },
         { fr: ["une cravate"], nl: ["een das"], cat: "kleding", week: 2 },
         { fr: ["un degré"], nl: ["een graad"], cat: "kleding", week: 2 },
-        { fr: ["une écharpe"], nl: ["een sjaal"], cat: "kleding", week: 2 }
+        { fr: ["une écharpe"], nl: ["een sjaal"], cat: "kleding", week: 2 },
+
+        // === WEEK 3 ===
+        { fr: ["un éclair"], nl: ["een bliksemflits"], cat: "kleding", week: 3 },
+        { fr: ["une éclaircie"], nl: ["een opklaring"], cat: "kleding", week: 3 },
+        { fr: ["des gants"], nl: ["handschoenen"], cat: "kleding", week: 3 },
+        { fr: ["des lunettes de soleil"], nl: ["een zonnebril"], cat: "kleding", week: 3 },
+        { fr: ["une montre"], nl: ["een horloge"], cat: "kleding", week: 3 },
+        { fr: ["des moufles"], nl: ["wanten"], cat: "kleding", week: 3 },
+        { fr: ["un nuage"], nl: ["een wolk"], cat: "kleding", week: 3 },
+        { fr: ["un orage"], nl: ["een onweer"], cat: "kleding", week: 3 },
+        { fr: ["un sac à main"], nl: ["een handtas"], cat: "kleding", week: 3 },
+        { fr: ["une tempête"], nl: ["een storm"], cat: "kleding", week: 3 },
+        { fr: ["le tonnerre"], nl: ["de donder"], cat: "kleding", week: 3 },
+        { fr: ["une veste"], nl: ["een vest", "een jasje"], cat: "kleding", week: 3 },
+        { fr: ["brillant, brillante", "brillant(e)"], nl: ["schitterend, blinkend", "schitterend", "blinkend"], cat: "kleding", week: 3 },
+        { fr: ["ensoleillé, ensoleillée", "ensoleillé(e)"], nl: ["zonnig"], cat: "kleding", week: 3 },
+        { fr: ["nuageux, nuageuse"], nl: ["bewolkt"], cat: "kleding", week: 3 },
+        { fr: ["à fleurs"], nl: ["bloemen-"], cat: "kleding", week: 3 },
+        { fr: ["à paillettes"], nl: ["met lovertjes", "met pailletten"], cat: "kleding", week: 3 },
+        { fr: ["il fait ... degrés"], nl: ["het is ... graden"], cat: "kleding", week: 3 },
+        { fr: ["il fait ensoleillé"], nl: ["het is zonnig"], cat: "kleding", week: 3 },
+        { fr: ["il fait frais"], nl: ["het is fris"], cat: "kleding", week: 3 },
+        { fr: ["il fait moins ... degrés"], nl: ["het is min ... graden"], cat: "kleding", week: 3 },
+        { fr: ["il fait nuageux"], nl: ["het is bewolkt"], cat: "kleding", week: 3 },
+        { fr: ["il gèle"], nl: ["het vriest"], cat: "kleding", week: 3 },
+        { fr: ["il grêle"], nl: ["het hagelt"], cat: "kleding", week: 3 },
+        { fr: ["il y a des averses"], nl: ["er zijn buien"], cat: "kleding", week: 3 }
     ];
 
     let activePool = [];
@@ -222,7 +251,6 @@
     let userErrors = [];
     let showingFeedback = false;
 
-    // Clean string helper function for loose matching
     function cleanString(str) {
         return str.trim().toLowerCase().replace(/’/g, "'").replace(/\s+/g, ' ');
     }
@@ -231,15 +259,15 @@
         direction = document.querySelector('input[name="direction"]:checked').value;
         const useWeek1 = document.getElementById("week-1").checked;
         const useWeek2 = document.getElementById("week-2").checked;
+        const useWeek3 = document.getElementById("week-3").checked;
 
         const useLanden = document.getElementById("cat-landen").checked;
         const useInwoners = document.getElementById("cat-inwoners").checked;
         const useTalen = document.getElementById("cat-talen").checked;
         const useKleding = document.getElementById("cat-kleding").checked;
 
-        // Filter vocabulary based on selection
         activePool = vocabulary.filter(w => {
-            const matchesWeek = (w.week === 1 && useWeek1) || (w.week === 2 && useWeek2);
+            const matchesWeek = (w.week === 1 && useWeek1) || (w.week === 2 && useWeek2) || (w.week === 3 && useWeek3);
             if (!matchesWeek) return false;
 
             if (w.cat === "landen" && useLanden) return true;
@@ -285,7 +313,7 @@
         inputEl.disabled = false;
         document.getElementById("btn-controleren").textContent = "Controleer (Enter)";
 
-        // Pop item to ensure no repetition
+        // Haal item uit pool om dubbele vragen te voorkomen
         currentItem = activePool.pop();
 
         const promptText = direction === "nl-fr" ? currentItem.nl[0] : currentItem.fr[0];
@@ -293,7 +321,7 @@
             landen: "Land / Stad",
             inwoners: "Inwoner (m/v)",
             talen: "Taal",
-            kleding: "Kleding / Weer / Overig"
+            kleding: "Kleding, Weer & Zinnen"
         };
 
         document.getElementById("prompt-word").textContent = promptText;
@@ -346,7 +374,7 @@
         document.getElementById("btn-controleren").textContent = "Volgende (Enter) →";
     }
 
-    // Global Enter key handler
+    // Enter toets handler voor direct doorgaan
     document.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             const quizScreen = document.getElementById("quiz-screen");
@@ -387,16 +415,15 @@
             adviceText.textContent = "Uitstekend gedaan! Je beheerst alle geselecteerde Franse woorden foutloos.";
         } else if (percent >= 80) {
             adviceTitle.textContent = "Zeer Goed! 👍";
-            adviceText.textContent = "Je hebt het merendeel goed. Neem de kleine foutjes hieronder nog even doorgelopen.";
+            adviceText.textContent = "Je hebt het merendeel goed. Neem de kleine foutjes hieronder nog even door.";
         } else if (percent >= 50) {
             adviceTitle.textContent = "Goed geprobeerd! 📚";
-            adviceText.textContent = "Je kent al veel woorden. Let extra op lidwoorden (un/une, le/la) en vrouwelijke uitgangen.";
+            adviceText.textContent = "Je kent al veel woorden. Let extra op lidwoorden, spelling en mannelijke/vrouwelijke vormen.";
         } else {
             adviceTitle.textContent = "Blijf Oefenen! 💪";
-            adviceText.textContent = "Herhaling is het geheim. Neem de foute woorden rustig door en probeer het nog een keer.";
+            adviceText.textContent = "Herhaling is het geheim. Neem de foute woorden rustig door en probeer het nog eens.";
         }
 
-        // Render error analysis
         const errorList = document.getElementById("error-list");
         errorList.innerHTML = "";
 
